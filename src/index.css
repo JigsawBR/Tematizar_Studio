@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-creme font-corpo text-ameixa;
+    line-height: 1.5;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-titulo;
+  }
+  :focus-visible {
+    outline: 3px solid theme("colors.rosa.DEFAULT");
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

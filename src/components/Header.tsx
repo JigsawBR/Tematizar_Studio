@@ -1,0 +1,83 @@
+import { useUi } from "../store/ui";
+import { useCart } from "../store/cart";
+import { WHATSAPP } from "../config";
+
+export default function Header() {
+  const { busca, setBusca, abrirCarrinho } = useUi();
+  const totalItens = useCart((s) => s.itens.reduce((soma, i) => soma + i.qtd, 0));
+
+  return (
+    <header className="border-b border-borda bg-white">
+      <div className="mx-auto flex max-w-conteudo flex-wrap items-center gap-5 px-5 py-4">
+        {/* marca */}
+        <a href="/" className="flex shrink-0 items-center gap-2.5">
+          <img
+            src="/logo.jpeg"
+            alt="Tematizar Studio"
+            className="h-12 w-12 rounded-full object-cover shadow-marca"
+          />
+          <span className="font-marca text-lg font-bold leading-tight text-roxo-escuro">
+            Tematizar Studio
+            <small className="block font-corpo text-[0.6rem] font-semibold tracking-[0.14em] text-cinza">
+              ARQUIVOS DIGITAIS
+            </small>
+          </span>
+        </a>
+
+        {/* busca */}
+        <form
+          className="relative order-3 flex-[1_1_100%] sm:order-none sm:flex-1"
+          onSubmit={(e) => e.preventDefault()}
+          role="search"
+        >
+          <input
+            type="text"
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            placeholder="O que você está buscando?"
+            aria-label="Buscar produtos"
+            className="w-full rounded-[40px] border-2 border-borda bg-creme py-3.5 pl-5 pr-12 font-corpo text-[0.95rem] transition focus:border-roxo focus:bg-white focus:outline-none"
+          />
+          <button
+            type="submit"
+            aria-label="Buscar"
+            className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-roxo text-white"
+          >
+            🔍
+          </button>
+        </form>
+
+        {/* ações */}
+        <div className="flex items-center gap-4">
+          <div className="hidden items-center gap-2 whitespace-nowrap text-[0.82rem] md:flex">
+            <span className="text-2xl">👤</span>
+            <span>
+              <b className="block font-extrabold">Olá! Faça login</b>
+              <span className="text-cinza">ou cadastre-se</span>
+            </span>
+          </div>
+          <a
+            href={`https://wa.me/${WHATSAPP}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Fale conosco no WhatsApp"
+            title="Fale conosco no WhatsApp"
+            className="text-2xl"
+          >
+            💬
+          </a>
+          <button
+            onClick={abrirCarrinho}
+            aria-label="Abrir carrinho"
+            className="relative text-2xl text-roxo"
+          >
+            🛒
+            <span className="absolute -right-2 -top-1.5 grid h-[19px] min-w-[19px] place-items-center rounded-[10px] bg-rosa px-1 font-titulo text-[0.7rem] font-extrabold text-white">
+              {totalItens}
+            </span>
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
