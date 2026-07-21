@@ -10,10 +10,12 @@ export default function EntrarPage() {
   const [searchParams] = useSearchParams();
   const destino = searchParams.get("redirect") || "/downloads";
 
-  const { entrar, cadastrar } = useAuth();
+  const { entrar, cadastrar, recuperarSenha } = useAuth();
   const mostrarToast = useUi((s) => s.mostrarToast);
 
   const [aba, setAba] = useState<Aba>("entrar");
+  const [recuperar, setRecuperar] = useState(false);
+  const [enviado, setEnviado] = useState(false);
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
@@ -25,6 +27,14 @@ export default function EntrarPage() {
     e.preventDefault();
     setErro(null);
     setEnviando(true);
+
+    if (recuperar) {
+      const { erro } = await recuperarSenha(email);
+      setEnviando(false);
+      if (erro) return setErro(erro);
+      setEnviado(true);
+      return;
+    }
 
     if (aba === "entrar") {
       const { erro } = await entrar(email, senha);
@@ -51,6 +61,76 @@ export default function EntrarPage() {
     }
   };
 
+  const irParaLogin = () => {
+    setRecuperar(false);
+    setEnviado(false);
+    setErro(null);
+  };
+
+  // ---- Modo recuperação de senha ----
+  if (recuperar) {
+    return (
+      <div className="mx-auto max-w-md px-5 py-12">
+        <div className="rounded-xl2 border border-borda bg-white p-8 shadow-marca">
+          <h1 className="mb-1 text-2xl font-extrabold text-roxo-escuro">
+            Recuperar senha
+          </h1>
+
+          {enviado ? (
+            <>
+              <p className="mb-6 mt-2 text-[0.9rem] text-cinza">
+                Se existir uma conta com <b>{email}</b>, enviamos um link para
+                redefinir a senha. Confira sua caixa de entrada (e o spam). 📩
+              </p>
+              <button
+                onClick={irParaLogin}
+                className="w-full rounded-xl bg-roxo py-3.5 font-titulo font-bold text-white transition hover:bg-roxo-escuro"
+              >
+                Voltar ao login
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="mb-6 mt-1 text-[0.9rem] text-cinza">
+                Digite seu e-mail e enviaremos um link para você criar uma nova
+                senha.
+              </p>
+              <form onSubmit={onSubmit} className="flex flex-col gap-3">
+                <Campo
+                  label="E-mail"
+                  type="email"
+                  value={email}
+                  onChange={setEmail}
+                  required
+                  placeholder="voce@email.com"
+                />
+                {erro && (
+                  <div className="rounded-lg bg-rosa-claro px-3 py-2 text-[0.85rem] font-bold text-rosa-escuro">
+                    {erro}
+                  </div>
+                )}
+                <button
+                  type="submit"
+                  disabled={enviando}
+                  className="mt-2 rounded-xl bg-roxo py-3.5 font-titulo font-bold text-white transition hover:bg-roxo-escuro disabled:opacity-60"
+                >
+                  {enviando ? "Enviando..." : "Enviar link"}
+                </button>
+              </form>
+              <button
+                onClick={irParaLogin}
+                className="mt-4 w-full text-center text-[0.85rem] font-bold text-roxo-escuro hover:underline"
+              >
+                ← Voltar ao login
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ---- Modo entrar / cadastrar ----
   return (
     <div className="mx-auto max-w-md px-5 py-12">
       <div className="rounded-xl2 border border-borda bg-white p-8 shadow-marca">
@@ -108,6 +188,19 @@ export default function EntrarPage() {
             required
             placeholder="Mínimo 6 caracteres"
           />
+
+          {aba === "entrar" && (
+            <button
+              type="button"
+              onClick={() => {
+                setRecuperar(true);
+                setErro(null);
+              }}
+              className="-mt-1 self-end text-[0.8rem] font-bold text-roxo-escuro hover:underline"
+            >
+              Esqueci minha senha
+            </button>
+          )}
 
           {erro && (
             <div className="rounded-lg bg-rosa-claro px-3 py-2 text-[0.85rem] font-bold text-rosa-escuro">

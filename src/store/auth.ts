@@ -13,10 +13,16 @@ interface AuthState {
     nome: string,
     telefone: string,
   ) => Promise<{ erro?: string; precisaConfirmar?: boolean }>;
+  recuperarSenha: (email: string) => Promise<{ erro?: string }>;
+  redefinirSenha: (novaSenha: string) => Promise<{ erro?: string }>;
+  atualizarPerfil: (
+    nome: string,
+    telefone: string,
+  ) => Promise<{ erro?: string }>;
   sair: () => Promise<void>;
 }
 
-export const useAuth = create<AuthState>(() => ({
+export const useAuth = create<AuthState>((_set, get) => ({
   session: null,
   user: null,
   carregando: true,
@@ -40,6 +46,44 @@ export const useAuth = create<AuthState>(() => ({
     // Se confirmação de e-mail estiver ligada, não há sessão ainda.
     const precisaConfirmar = !data.session;
     return { precisaConfirmar };
+  },
+
+  // Envia o e-mail com o link de recuperação. O link volta para
+  // /redefinir-senha, onde o usuário define a nova senha.
+  recuperarSenha: async (email) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/redefinir-senha`,
+    });
+    if (error) return { erro: traduzErro(error.message) };
+    return {};
+  },
+
+  // Define a nova senha. Funciona tanto no fluxo de recuperação (sessão
+  // temporária vinda do link) quanto para um usuário logado que troca a senha.
+  redefinirSenha: async (novaSenha) => {
+    const { error } = await supabase.auth.updateUser({ password: novaSenha });
+    if (error) return { erro: traduzErro(error.message) };
+    return {};
+  },
+
+  // Atualiza nome/telefone no user_metadata (usado no cabeçalho) e na tabela
+  // perfis (fonte para entrega/relatórios).
+  atualizarPerfil: async (nome, telefone) => {
+    const { error: erroMeta } = await supabase.auth.updateUser({
+      data: { nome, telefone },
+    });
+    const uid = get().user?.id;
+    let erroPerfil = null;
+    if (uid) {
+      const { error } = await supabase
+        .from("perfis")
+        .update({ nome, telefone })
+        .eq("id", uid);
+      erroPerfil = error;
+    }
+    if (erroMeta || erroPerfil)
+      return { erro: "Não foi possível salvar. Tente novamente." };
+    return {};
   },
 
   sair: async () => {
@@ -69,9 +113,15 @@ function traduzErro(msg: string): string {
   if (m.includes("invalid login")) return "E-mail ou senha incorretos.";
   if (m.includes("already registered") || m.includes("already been registered"))
     return "Este e-mail já está cadastrado.";
-  if (m.includes("password should be"))
+  if (m.includes("password should be") || m.includes("password should contain"))
     return "A senha precisa ter pelo menos 6 caracteres.";
+  if (m.includes("new password should be different"))
+    return "A nova senha precisa ser diferente da atual.";
   if (m.includes("unable to validate email") || m.includes("invalid email"))
     return "E-mail inválido.";
+  if (m.includes("for security purposes") || m.includes("rate limit"))
+    return "Muitas tentativas. Aguarde alguns instantes e tente de novo.";
+  if (m.includes("auth session missing") || m.includes("session"))
+    return "Link expirado ou inválido. Peça um novo e-mail de recuperação.";
   return "Não foi possível concluir. Tente novamente.";
 }

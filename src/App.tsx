@@ -10,6 +10,8 @@ import DownloadsPage from "@/pages/DownloadsPage";
 import ComoBaixarPage from "@/pages/ComoBaixarPage";
 import ContatoPage from "@/pages/ContatoPage";
 import EntrarPage from "@/pages/EntrarPage";
+import RedefinirSenhaPage from "@/pages/RedefinirSenhaPage";
+import ContaPage from "@/pages/ContaPage";
 import PedidoStatusPage from "@/pages/PedidoStatusPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 
@@ -28,6 +30,8 @@ export default function App() {
           <Route path="/como-baixar" element={<ComoBaixarPage />} />
           <Route path="/contato" element={<ContatoPage />} />
           <Route path="/entrar" element={<EntrarPage />} />
+          <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
+          <Route path="/conta" element={<ContaPage />} />
           <Route path="/pedido/:status" element={<PedidoStatusPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>

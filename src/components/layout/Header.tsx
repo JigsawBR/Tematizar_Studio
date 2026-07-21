@@ -71,9 +71,16 @@ export default function Header() {
         {/* ações */}
         <div className="flex items-center gap-4">
           {user ? (
-            <div className="hidden items-center gap-2 whitespace-nowrap text-[0.82rem] md:flex">
-              <span className="text-2xl">👤</span>
-              <span>
+            <div className="flex items-center gap-2 whitespace-nowrap text-[0.82rem]">
+              <Link
+                to="/conta"
+                aria-label="Minha conta"
+                title="Minha conta"
+                className="text-2xl"
+              >
+                👤
+              </Link>
+              <span className="hidden md:block">
                 <b className="block font-extrabold">Olá, {primeiroNome}</b>
                 <button
                   onClick={onSair}
@@ -86,10 +93,12 @@ export default function Header() {
           ) : (
             <Link
               to="/entrar"
-              className="hidden items-center gap-2 whitespace-nowrap text-[0.82rem] md:flex"
+              aria-label="Entrar ou cadastrar"
+              title="Entrar ou cadastrar"
+              className="flex items-center gap-2 whitespace-nowrap text-[0.82rem]"
             >
               <span className="text-2xl">👤</span>
-              <span>
+              <span className="hidden md:block">
                 <b className="block font-extrabold">Olá! Faça login</b>
                 <span className="text-cinza">ou cadastre-se</span>
               </span>
