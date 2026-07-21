@@ -42,13 +42,18 @@ O frontend já usa: cliente Supabase (`src/lib/supabase.ts`), store de auth
 com dados reais. Falta só ativar o backend.
 
 ### Edge Functions
-| Função | Papel | Deploy |
-| --- | --- | --- |
-| `criar-pagamento` | Cria o pedido (preço recalculado no banco) e a preferência do Checkout Pro | `supabase functions deploy criar-pagamento` |
-| `webhook-mp` | Confere o pagamento no MP e marca o pedido como `pago` | `supabase functions deploy webhook-mp --no-verify-jwt` |
-| `download` | Confere a compra e gera URL assinada temporária do bucket privado | `supabase functions deploy download` |
+Escritas com o framework **`@supabase/server`** (`withSupabase`) — ele resolve
+auth, cliente admin (`ctx.supabaseAdmin`) e CORS automaticamente.
 
-> `webhook-mp` **precisa** de `--no-verify-jwt` — o Mercado Pago não envia JWT do Supabase.
+| Função | Papel | Modo auth |
+| --- | --- | --- |
+| `criar-pagamento` | Cria o pedido (preço recalculado no banco) e a preferência do Checkout Pro | `user` |
+| `webhook-mp` | Confere o pagamento no MP e marca o pedido como `pago` | `none` |
+| `download` | Confere a compra e gera URL assinada temporária do bucket privado | `user` |
+
+> `webhook-mp` usa `auth: 'none'` porque o Mercado Pago é externo e não envia
+> JWT do Supabase. O `supabase/config.toml` já desliga o `verify_jwt` dessa
+> função; a segurança vem de re-consultar o pagamento na API do MP.
 
 ### Passo a passo
 ```bash
@@ -57,11 +62,13 @@ com dados reais. Falta só ativar o backend.
 # 2. Guardar os secrets (NUNCA no frontend / git)
 supabase secrets set MP_ACCESS_TOKEN=SEU_ACCESS_TOKEN_DO_MERCADO_PAGO
 supabase secrets set SITE_URL=https://seu-site.vercel.app
-#    (SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY já existem automaticamente)
+#    SUPABASE_URL e as chaves de API são injetadas automaticamente.
+#    (o @supabase/server prefere as novas chaves sb_publishable_/sb_secret_;
+#     se seu projeto ainda usa as legadas, ele faz o fallback sozinho.)
 
-# 3. Deploy das funções
+# 3. Deploy das funções (o config.toml cuida do verify_jwt do webhook)
 supabase functions deploy criar-pagamento
-supabase functions deploy webhook-mp --no-verify-jwt
+supabase functions deploy webhook-mp
 supabase functions deploy download
 
 # 4. No painel do Mercado Pago, cadastrar a URL de webhook (evento "Pagamentos"):

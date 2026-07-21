@@ -1,54 +1,45 @@
 // Edge Function: criar-pagamento
 // Cria um pedido (pendente) e uma preferência de Checkout Pro no Mercado Pago.
 // Preços são SEMPRE recalculados no banco — o cliente nunca define o valor.
-// Deploy: supabase functions deploy criar-pagamento
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, json } from "../_shared/cors.ts";
+// auth: 'user' -> exige um usuário logado (JWT). verify_jwt pode ficar ligado.
+import { withSupabase } from "npm:@supabase/server";
 
 interface ItemEntrada {
   slug: string;
   qtd: number;
 }
 
-Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
-
-  try {
-    const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-    const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+export default {
+  fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
     const MP_TOKEN = Deno.env.get("MP_ACCESS_TOKEN");
     const SITE_URL = Deno.env.get("SITE_URL") ?? "http://localhost:5173";
-
-    if (!MP_TOKEN) return json({ erro: "MP_ACCESS_TOKEN não configurado" }, 500);
-
-    // 1) Identifica o usuário pelo JWT enviado no Authorization.
-    const authHeader = req.headers.get("Authorization") ?? "";
-    const token = authHeader.replace("Bearer ", "");
-    const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
-    const { data: userData, error: userErr } = await admin.auth.getUser(token);
-    if (userErr || !userData.user) {
-      return json({ erro: "Faça login para finalizar a compra." }, 401);
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+    if (!MP_TOKEN) {
+      return Response.json({ erro: "MP_ACCESS_TOKEN não configurado" }, { status: 500 });
     }
+
+    // Usuário verificado pelo modo auth: 'user'.
+    const { data: userData } = await ctx.supabase.auth.getUser();
     const user = userData.user;
+    if (!user) {
+      return Response.json({ erro: "Faça login para finalizar a compra." }, { status: 401 });
+    }
 
-    // 2) Lê itens e cupom do corpo.
     const body = await req.json();
-    const itensEntrada: ItemEntrada[] = Array.isArray(body?.itens)
-      ? body.itens
-      : [];
+    const itensEntrada: ItemEntrada[] = Array.isArray(body?.itens) ? body.itens : [];
     const cupomCodigo: string | null = body?.cupom ?? null;
-    if (itensEntrada.length === 0) return json({ erro: "Carrinho vazio." }, 400);
+    if (itensEntrada.length === 0) {
+      return Response.json({ erro: "Carrinho vazio." }, { status: 400 });
+    }
 
-    // 3) Busca produtos autoritativos no banco pelos slugs.
+    // Produtos autoritativos, buscados pelo slug (admin ignora RLS).
     const slugs = itensEntrada.map((i) => i.slug);
-    const { data: produtos, error: prodErr } = await admin
+    const { data: produtos } = await ctx.supabaseAdmin
       .from("produtos")
       .select("id, slug, nome, preco_centavos, ativo")
       .in("slug", slugs);
-    if (prodErr || !produtos?.length) {
-      return json({ erro: "Produtos não encontrados." }, 400);
+    if (!produtos?.length) {
+      return Response.json({ erro: "Produtos não encontrados." }, { status: 400 });
     }
 
     let subtotal = 0;
@@ -83,13 +74,15 @@ Deno.serve(async (req) => {
         currency_id: "BRL",
       });
     }
-    if (itensPedido.length === 0) return json({ erro: "Carrinho inválido." }, 400);
+    if (itensPedido.length === 0) {
+      return Response.json({ erro: "Carrinho inválido." }, { status: 400 });
+    }
 
-    // 4) Cupom (opcional) — validado no banco.
+    // Cupom (opcional) — validado no banco.
     let desconto = 0;
     let cupomValido: string | null = null;
     if (cupomCodigo) {
-      const { data: cupom } = await admin
+      const { data: cupom } = await ctx.supabaseAdmin
         .from("cupons")
         .select("codigo, tipo, valor, ativo")
         .eq("codigo", cupomCodigo.toUpperCase())
@@ -105,8 +98,8 @@ Deno.serve(async (req) => {
     }
     const total = Math.max(0, subtotal - desconto);
 
-    // 5) Cria o pedido (pendente).
-    const { data: pedido, error: pedErr } = await admin
+    // Cria o pedido (pendente).
+    const { data: pedido, error: pedErr } = await ctx.supabaseAdmin
       .from("pedidos")
       .insert({
         user_id: user.id,
@@ -119,13 +112,15 @@ Deno.serve(async (req) => {
       })
       .select("id")
       .single();
-    if (pedErr || !pedido) return json({ erro: "Falha ao criar pedido." }, 500);
+    if (pedErr || !pedido) {
+      return Response.json({ erro: "Falha ao criar pedido." }, { status: 500 });
+    }
 
-    await admin
+    await ctx.supabaseAdmin
       .from("itens_pedido")
       .insert(itensPedido.map((i) => ({ ...i, pedido_id: pedido.id })));
 
-    // 6) Cria a preferência no Mercado Pago (Checkout Pro).
+    // Preferência do Checkout Pro.
     const prefBody = {
       items: itensMP,
       external_reference: pedido.id,
@@ -139,30 +134,27 @@ Deno.serve(async (req) => {
       notification_url: `${SUPABASE_URL}/functions/v1/webhook-mp`,
     };
 
-    const mpResp = await fetch(
-      "https://api.mercadopago.com/checkout/preferences",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${MP_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(prefBody),
+    const mpResp = await fetch("https://api.mercadopago.com/checkout/preferences", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${MP_TOKEN}`,
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(prefBody),
+    });
     const pref = await mpResp.json();
     if (!mpResp.ok) {
-      return json({ erro: "Mercado Pago recusou a preferência.", detalhe: pref }, 502);
+      return Response.json(
+        { erro: "Mercado Pago recusou a preferência.", detalhe: pref },
+        { status: 502 },
+      );
     }
 
-    // Guarda a referência do provedor no pedido.
-    await admin
+    await ctx.supabaseAdmin
       .from("pedidos")
       .update({ pagamento_id: pref.id })
       .eq("id", pedido.id);
 
-    return json({ init_point: pref.init_point, pedido_id: pedido.id });
-  } catch (e) {
-    return json({ erro: "Erro inesperado.", detalhe: String(e) }, 500);
-  }
-});
+    return Response.json({ init_point: pref.init_point, pedido_id: pedido.id });
+  }),
+};

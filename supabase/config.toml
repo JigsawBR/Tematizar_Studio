@@ -1,0 +1,6 @@
+# Config das Edge Functions.
+# criar-pagamento e download usam auth: 'user' -> verify_jwt pode ficar ligado (padrão).
+# webhook-mp usa auth: 'none' (provedor externo) -> precisa desligar o verify_jwt.
+
+[functions.webhook-mp]
+verify_jwt = false
