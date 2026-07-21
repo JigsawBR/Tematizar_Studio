@@ -3,6 +3,7 @@
 // Preços são SEMPRE recalculados no banco — o cliente nunca define o valor.
 // auth: 'user' -> exige um usuário logado (JWT). verify_jwt pode ficar ligado.
 import { withSupabase } from "npm:@supabase/server";
+import { adminClient } from "../_shared/admin.ts";
 
 interface ItemEntrada {
   slug: string;
@@ -25,6 +26,8 @@ export default {
       return Response.json({ erro: "Faça login para finalizar a compra." }, { status: 401 });
     }
 
+    const admin = adminClient();
+
     const body = await req.json();
     const itensEntrada: ItemEntrada[] = Array.isArray(body?.itens) ? body.itens : [];
     const cupomCodigo: string | null = body?.cupom ?? null;
@@ -34,11 +37,11 @@ export default {
 
     // Produtos autoritativos, buscados pelo slug (admin ignora RLS).
     const slugs = itensEntrada.map((i) => i.slug);
-    const { data: produtos } = await ctx.supabaseAdmin
+    const { data: produtos, error: prodErr } = await admin
       .from("produtos")
       .select("id, slug, nome, preco_centavos, ativo")
       .in("slug", slugs);
-    if (!produtos?.length) {
+    if (prodErr || !produtos?.length) {
       return Response.json({ erro: "Produtos não encontrados." }, { status: 400 });
     }
 
@@ -82,7 +85,7 @@ export default {
     let desconto = 0;
     let cupomValido: string | null = null;
     if (cupomCodigo) {
-      const { data: cupom } = await ctx.supabaseAdmin
+      const { data: cupom } = await admin
         .from("cupons")
         .select("codigo, tipo, valor, ativo")
         .eq("codigo", cupomCodigo.toUpperCase())
@@ -99,7 +102,7 @@ export default {
     const total = Math.max(0, subtotal - desconto);
 
     // Cria o pedido (pendente).
-    const { data: pedido, error: pedErr } = await ctx.supabaseAdmin
+    const { data: pedido, error: pedErr } = await admin
       .from("pedidos")
       .insert({
         user_id: user.id,
@@ -116,7 +119,7 @@ export default {
       return Response.json({ erro: "Falha ao criar pedido." }, { status: 500 });
     }
 
-    await ctx.supabaseAdmin
+    await admin
       .from("itens_pedido")
       .insert(itensPedido.map((i) => ({ ...i, pedido_id: pedido.id })));
 
@@ -150,7 +153,7 @@ export default {
       );
     }
 
-    await ctx.supabaseAdmin
+    await admin
       .from("pedidos")
       .update({ pagamento_id: pref.id })
       .eq("id", pedido.id);

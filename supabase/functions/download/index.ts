@@ -3,6 +3,7 @@
 // assinada e temporária do bucket privado 'arquivos'. O arquivo nunca fica público.
 // auth: 'user' -> exige um usuário logado.
 import { withSupabase } from "npm:@supabase/server";
+import { adminClient } from "../_shared/admin.ts";
 
 export default {
   fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
@@ -10,13 +11,15 @@ export default {
     const user = userData.user;
     if (!user) return Response.json({ erro: "Não autorizado." }, { status: 401 });
 
+    const admin = adminClient();
+
     const { produto_id } = await req.json();
     if (!produto_id) {
       return Response.json({ erro: "produto_id obrigatório." }, { status: 400 });
     }
 
     // Confere a liberação de download deste usuário para este produto.
-    const { data: dl } = await ctx.supabaseAdmin
+    const { data: dl } = await admin
       .from("downloads")
       .select("id, arquivo_path, downloads_realizados, max_downloads, expira_em")
       .eq("user_id", user.id)
@@ -34,14 +37,14 @@ export default {
     }
 
     // URL assinada válida por 60s.
-    const { data: signed, error: signErr } = await ctx.supabaseAdmin.storage
+    const { data: signed, error: signErr } = await admin.storage
       .from("arquivos")
       .createSignedUrl(dl.arquivo_path, 60);
     if (signErr || !signed) {
       return Response.json({ erro: "Falha ao gerar link." }, { status: 500 });
     }
 
-    await ctx.supabaseAdmin
+    await admin
       .from("downloads")
       .update({ downloads_realizados: dl.downloads_realizados + 1 })
       .eq("id", dl.id);

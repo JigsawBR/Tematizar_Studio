@@ -8,11 +8,14 @@
 // 'approved' e o external_reference amarra a um pedido real nosso.
 // Requer verify_jwt = false (ver supabase/config.toml).
 import { withSupabase } from "npm:@supabase/server";
+import { adminClient } from "../_shared/admin.ts";
 
 export default {
-  fetch: withSupabase({ auth: "none" }, async (req, ctx) => {
+  fetch: withSupabase({ auth: "none" }, async (req) => {
     const MP_TOKEN = Deno.env.get("MP_ACCESS_TOKEN");
     if (!MP_TOKEN) return new Response("MP_ACCESS_TOKEN ausente", { status: 500 });
+
+    const admin = adminClient();
 
     // O MP manda o id do pagamento pela query (?data.id=) e/ou pelo corpo.
     const url = new URL(req.url);
@@ -40,7 +43,7 @@ export default {
 
     if (pagamento.status === "approved") {
       // Marca como pago -> o trigger gera os downloads.
-      await ctx.supabaseAdmin
+      await admin
         .from("pedidos")
         .update({ status: "pago", pagamento_id: String(paymentId) })
         .eq("id", pedidoId)
@@ -49,7 +52,7 @@ export default {
       pagamento.status === "rejected" ||
       pagamento.status === "cancelled"
     ) {
-      await ctx.supabaseAdmin
+      await admin
         .from("pedidos")
         .update({ status: "cancelado" })
         .eq("id", pedidoId)
