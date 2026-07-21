@@ -1,4 +1,4 @@
-import type { Produto } from "../types";
+import type { Produto } from "@/types";
 
 interface Props {
   produto: Produto;

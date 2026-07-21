@@ -1,5 +1,5 @@
-import { useUi } from "../store/ui";
-import { PRODUTOS, CATEGORIAS } from "../data/products";
+import { useUi } from "@/store/ui";
+import { PRODUTOS, CATEGORIAS } from "@/data/products";
 
 export default function Filters() {
   const {

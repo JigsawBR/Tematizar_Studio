@@ -1,14 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
-import { useCart } from "../store/cart";
-import { useUi } from "../store/ui";
-import { PRODUTOS } from "../data/products";
-import { brl } from "../lib/format";
-import { WHATSAPP } from "../config";
-import CakePlaceholder from "./CakePlaceholder";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "@/store/cart";
+import { useUi } from "@/store/ui";
+import { useAuth } from "@/store/auth";
+import { supabase } from "@/lib/supabase";
+import { PRODUTOS } from "@/data/products";
+import { brl } from "@/lib/format";
+import { WHATSAPP } from "@/config";
+import CakePlaceholder from "@/components/catalog/CakePlaceholder";
 
 export default function CartDrawer() {
   const { itens, cupom, desconto, mudarQtd, remover, aplicarCupom } = useCart();
-  const { carrinhoAberto, fecharCarrinho } = useUi();
+  const { carrinhoAberto, fecharCarrinho, mostrarToast } = useUi();
+  const user = useAuth((s) => s.user);
+  const navigate = useNavigate();
+  const [pagando, setPagando] = useState(false);
 
   const [codigoCupom, setCodigoCupom] = useState("");
   const [cupomMsg, setCupomMsg] = useState<{ texto: string; ok: boolean } | null>(
@@ -61,6 +67,34 @@ export default function CartDrawer() {
       "_blank",
       "noopener",
     );
+  };
+
+  const pagarMercadoPago = async () => {
+    if (itens.length === 0) return;
+    if (!user) {
+      fecharCarrinho();
+      mostrarToast("Entre na sua conta para finalizar. 🔒");
+      navigate("/entrar?redirect=/downloads");
+      return;
+    }
+    setPagando(true);
+    const payload = itens
+      .map((i) => {
+        const p = PRODUTOS.find((x) => x.id === i.id);
+        return p ? { slug: p.slug, qtd: i.qtd } : null;
+      })
+      .filter(Boolean);
+
+    const { data, error } = await supabase.functions.invoke("criar-pagamento", {
+      body: { itens: payload, cupom: cupom || null },
+    });
+    setPagando(false);
+
+    if (error || !data?.init_point) {
+      mostrarToast("Não foi possível iniciar o pagamento. Tente novamente.");
+      return;
+    }
+    window.location.href = data.init_point;
   };
 
   return (
@@ -187,10 +221,17 @@ export default function CartDrawer() {
             </div>
 
             <button
-              onClick={finalizarWhats}
-              className="flex w-full items-center justify-center gap-2.5 rounded-[14px] bg-[#25D366] py-3.5 font-titulo text-[1.05rem] font-bold text-white transition hover:bg-[#1eb355]"
+              onClick={pagarMercadoPago}
+              disabled={pagando}
+              className="mb-2.5 flex w-full items-center justify-center gap-2.5 rounded-[14px] bg-roxo py-3.5 font-titulo text-[1.05rem] font-bold text-white transition hover:bg-roxo-escuro disabled:opacity-60"
             >
-              💬 Finalizar pelo WhatsApp
+              {pagando ? "Abrindo pagamento..." : "💳 Pagar (PIX ou cartão)"}
+            </button>
+            <button
+              onClick={finalizarWhats}
+              className="flex w-full items-center justify-center gap-2.5 rounded-[14px] border-2 border-[#25D366] py-3 font-titulo text-[0.95rem] font-bold text-[#1eb355] transition hover:bg-[#25D366]/10"
+            >
+              💬 Prefiro combinar pelo WhatsApp
             </button>
           </div>
         )}

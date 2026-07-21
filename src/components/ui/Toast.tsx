@@ -1,4 +1,4 @@
-import { useUi } from "../store/ui";
+import { useUi } from "@/store/ui";
 
 export default function Toast() {
   const toast = useUi((s) => s.toast);

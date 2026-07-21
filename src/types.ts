@@ -1,5 +1,7 @@
 export interface Produto {
   id: number;
+  /** identificador estável que casa com o slug no banco (Supabase) */
+  slug: string;
   nome: string;
   cat: string;
   preco: number;
@@ -9,6 +11,8 @@ export interface Produto {
   c2: string;
   /** emoji do topo no placeholder */
   topo: string;
+  /** descrição exibida na página do produto (opcional) */
+  descricao?: string;
   /** caminho para foto real (opcional) — quando presente, substitui o placeholder */
   img?: string;
 }

@@ -1,29 +1,37 @@
-import PromoBar from "./components/PromoBar";
-import Header from "./components/Header";
-import Nav from "./components/Nav";
-import PageHeader from "./components/PageHeader";
-import Filters from "./components/Filters";
-import ProductGrid from "./components/ProductGrid";
-import Footer from "./components/Footer";
-import CartDrawer from "./components/CartDrawer";
-import Toast from "./components/Toast";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "@/components/layout/Layout";
+import HomePage from "@/pages/HomePage";
+import CatalogPage from "@/pages/CatalogPage";
+import ProductPage from "@/pages/ProductPage";
+import FestasPage from "@/pages/FestasPage";
+import DatasComemorativasPage from "@/pages/DatasComemorativasPage";
+import KitDigitalPage from "@/pages/KitDigitalPage";
+import DownloadsPage from "@/pages/DownloadsPage";
+import ComoBaixarPage from "@/pages/ComoBaixarPage";
+import ContatoPage from "@/pages/ContatoPage";
+import EntrarPage from "@/pages/EntrarPage";
+import PedidoStatusPage from "@/pages/PedidoStatusPage";
+import NotFoundPage from "@/pages/NotFoundPage";
 
 export default function App() {
   return (
-    <>
-      <PromoBar />
-      <Header />
-      <Nav />
-      <PageHeader />
-
-      <div className="mx-auto grid max-w-conteudo grid-cols-1 items-start gap-6 px-5 py-5 md:grid-cols-[260px_1fr]">
-        <Filters />
-        <ProductGrid />
-      </div>
-
-      <Footer />
-      <CartDrawer />
-      <Toast />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/catalogo" element={<CatalogPage />} />
+          <Route path="/produto/:id" element={<ProductPage />} />
+          <Route path="/festas" element={<FestasPage />} />
+          <Route path="/datas-comemorativas" element={<DatasComemorativasPage />} />
+          <Route path="/kit-digital" element={<KitDigitalPage />} />
+          <Route path="/downloads" element={<DownloadsPage />} />
+          <Route path="/como-baixar" element={<ComoBaixarPage />} />
+          <Route path="/contato" element={<ContatoPage />} />
+          <Route path="/entrar" element={<EntrarPage />} />
+          <Route path="/pedido/:status" element={<PedidoStatusPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }

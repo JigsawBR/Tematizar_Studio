@@ -1,5 +1,5 @@
-import { useUi } from "../store/ui";
-import type { Ordenacao } from "../types";
+import { useUi } from "@/store/ui";
+import type { Ordenacao } from "@/types";
 
 interface Props {
   quantidade: number;

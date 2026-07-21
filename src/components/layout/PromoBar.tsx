@@ -1,8 +1,8 @@
-import { PROMO_CUPOM } from "../config";
+import { PROMO_CUPOM } from "@/config";
 
 export default function PromoBar() {
   return (
-    <div className="relative bg-gradient-to-r from-roxo to-rosa px-11 py-2.5 text-center text-sm font-bold tracking-wide text-white">
+    <div className="relative bg-gradient-to-r from-roxo to-rosa px-8 py-2.5 text-center text-xs font-bold tracking-wide text-white sm:px-11 sm:text-sm">
       <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-lg opacity-70">
         ‹
       </span>

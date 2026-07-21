@@ -1,16 +1,37 @@
-import { useUi } from "../store/ui";
-import { useCart } from "../store/cart";
-import { WHATSAPP } from "../config";
+import { Link, useNavigate } from "react-router-dom";
+import { useUi } from "@/store/ui";
+import { useCart } from "@/store/cart";
+import { useAuth } from "@/store/auth";
+import { WHATSAPP } from "@/config";
 
 export default function Header() {
   const { busca, setBusca, abrirCarrinho } = useUi();
   const totalItens = useCart((s) => s.itens.reduce((soma, i) => soma + i.qtd, 0));
+  const user = useAuth((s) => s.user);
+  const sair = useAuth((s) => s.sair);
+  const mostrarToast = useUi((s) => s.mostrarToast);
+  const navigate = useNavigate();
+
+  const primeiroNome =
+    (user?.user_metadata?.nome as string | undefined)?.split(" ")[0] ??
+    user?.email?.split("@")[0];
+
+  const onSair = async () => {
+    await sair();
+    mostrarToast("Você saiu da conta. Até logo! 👋");
+    navigate("/");
+  };
+
+  const onBuscar = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate("/catalogo");
+  };
 
   return (
     <header className="border-b border-borda bg-white">
       <div className="mx-auto flex max-w-conteudo flex-wrap items-center gap-5 px-5 py-4">
         {/* marca */}
-        <a href="/" className="flex shrink-0 items-center gap-2.5">
+        <Link to="/" className="flex shrink-0 items-center gap-2.5">
           <img
             src="/logo.jpeg"
             alt="Tematizar Studio"
@@ -22,12 +43,12 @@ export default function Header() {
               ARQUIVOS DIGITAIS
             </small>
           </span>
-        </a>
+        </Link>
 
         {/* busca */}
         <form
           className="relative order-3 flex-[1_1_100%] sm:order-none sm:flex-1"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={onBuscar}
           role="search"
         >
           <input
@@ -49,13 +70,31 @@ export default function Header() {
 
         {/* ações */}
         <div className="flex items-center gap-4">
-          <div className="hidden items-center gap-2 whitespace-nowrap text-[0.82rem] md:flex">
-            <span className="text-2xl">👤</span>
-            <span>
-              <b className="block font-extrabold">Olá! Faça login</b>
-              <span className="text-cinza">ou cadastre-se</span>
-            </span>
-          </div>
+          {user ? (
+            <div className="hidden items-center gap-2 whitespace-nowrap text-[0.82rem] md:flex">
+              <span className="text-2xl">👤</span>
+              <span>
+                <b className="block font-extrabold">Olá, {primeiroNome}</b>
+                <button
+                  onClick={onSair}
+                  className="text-cinza transition hover:text-rosa-escuro"
+                >
+                  Sair
+                </button>
+              </span>
+            </div>
+          ) : (
+            <Link
+              to="/entrar"
+              className="hidden items-center gap-2 whitespace-nowrap text-[0.82rem] md:flex"
+            >
+              <span className="text-2xl">👤</span>
+              <span>
+                <b className="block font-extrabold">Olá! Faça login</b>
+                <span className="text-cinza">ou cadastre-se</span>
+              </span>
+            </Link>
+          )}
           <a
             href={`https://wa.me/${WHATSAPP}`}
             target="_blank"
