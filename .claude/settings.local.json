@@ -6,7 +6,14 @@
       "Bash(npm run *)",
       "Bash(npm uninstall *)",
       "Bash(rm -f supabase/functions/_shared/cors.ts)",
-      "Bash(rmdir supabase/functions/_shared)"
+      "Bash(rmdir supabase/functions/_shared)",
+      "Bash(npm audit *)",
+      "Bash(git checkout *)",
+      "Bash(npm ls *)",
+      "Bash(supabase --version)",
+      "Bash(npx supabase *)",
+      "Bash(python3 -c 'import json,sys; d=json.load\\(sys.stdin\\); [print\\(f\"{s[\\\\\"name\\\\\"]:28} atualizado: {s[\\\\\"updated_at\\\\\"]}\"\\) for s in d[\"secrets\"] if s[\"name\"] in \\(\"MP_ACCESS_TOKEN\",\"SITE_URL\"\\)]')",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(s['name'].ljust\\(20\\), 'atualizado:', s['updated_at']\\) for s in d['secrets'] if s['name'] in \\('MP_ACCESS_TOKEN','SITE_URL'\\)]\")"
     ]
   }
 }

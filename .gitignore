@@ -4,6 +4,7 @@ dist-ssr
 *.local
 .DS_Store
 .vercel
+.env
 
 # logs
 npm-debug.log*

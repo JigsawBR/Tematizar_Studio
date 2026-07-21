@@ -124,7 +124,7 @@ export default {
       .insert(itensPedido.map((i) => ({ ...i, pedido_id: pedido.id })));
 
     // Preferência do Checkout Pro.
-    const prefBody = {
+    const prefBody: Record<string, unknown> = {
       items: itensMP,
       external_reference: pedido.id,
       payer: { email: user.email },
@@ -133,9 +133,14 @@ export default {
         pending: `${SITE_URL}/pedido/pendente`,
         failure: `${SITE_URL}/pedido/falha`,
       },
-      auto_return: "approved",
       notification_url: `${SUPABASE_URL}/functions/v1/webhook-mp`,
     };
+    // O MP só aceita auto_return quando a back_url.success é HTTPS pública —
+    // com http/localhost ele responde "invalid_auto_return". Em dev seguimos
+    // sem retorno automático; em produção (SITE_URL https) ele é ativado.
+    if (SITE_URL.startsWith("https://")) {
+      prefBody.auto_return = "approved";
+    }
 
     const mpResp = await fetch("https://api.mercadopago.com/checkout/preferences", {
       method: "POST",
