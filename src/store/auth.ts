@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import { useCart } from "@/store/cart";
 
 interface AuthState {
   session: Session | null;
@@ -104,7 +105,9 @@ export const useAuth = create<AuthState>((_set, get) => ({
 }));
 
 // Mantém o store sincronizado com o Supabase (login, logout, refresh de token).
+// Em cada mudança, aponta o carrinho para o dono certo (cada conta tem o seu).
 supabase.auth.getSession().then(({ data }) => {
+  useCart.getState().sincronizarUsuario(data.session?.user?.id ?? null);
   useAuth.setState({
     session: data.session,
     user: data.session?.user ?? null,
@@ -113,6 +116,7 @@ supabase.auth.getSession().then(({ data }) => {
 });
 
 supabase.auth.onAuthStateChange((_event, session) => {
+  useCart.getState().sincronizarUsuario(session?.user?.id ?? null);
   useAuth.setState({
     session,
     user: session?.user ?? null,
