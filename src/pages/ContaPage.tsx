@@ -23,7 +23,13 @@ export default function ContaPage() {
   useEffect(() => {
     if (!user) return;
     const meta = user.user_metadata ?? {};
-    setNome((meta.nome as string) ?? "");
+    // Login por e-mail salva "nome"; login pelo Google traz "full_name"/"name".
+    setNome(
+      (meta.nome as string) ??
+        (meta.full_name as string) ??
+        (meta.name as string) ??
+        "",
+    );
     setTelefone((meta.telefone as string) ?? "");
     supabase
       .from("perfis")

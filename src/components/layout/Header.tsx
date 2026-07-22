@@ -12,9 +12,13 @@ export default function Header() {
   const mostrarToast = useUi((s) => s.mostrarToast);
   const navigate = useNavigate();
 
+  // Login por e-mail salva "nome"; login pelo Google traz "full_name"/"name".
+  const nomeCompleto =
+    (user?.user_metadata?.nome as string | undefined) ??
+    (user?.user_metadata?.full_name as string | undefined) ??
+    (user?.user_metadata?.name as string | undefined);
   const primeiroNome =
-    (user?.user_metadata?.nome as string | undefined)?.split(" ")[0] ??
-    user?.email?.split("@")[0];
+    nomeCompleto?.split(" ")[0] ?? user?.email?.split("@")[0];
 
   const onSair = async () => {
     await sair();
