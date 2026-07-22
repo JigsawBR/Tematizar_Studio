@@ -1,21 +1,31 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { PRODUTOS } from "@/data/products";
 import { brl } from "@/lib/format";
 import { useCart } from "@/store/cart";
 import { useUi } from "@/store/ui";
+import { useCatalog } from "@/store/catalog";
 import CakePlaceholder from "@/components/catalog/CakePlaceholder";
 import ProductGrid from "@/components/catalog/ProductGrid";
 
 export default function ProductPage() {
   const { id } = useParams();
-  const produto = PRODUTOS.find((p) => p.id === Number(id));
+  const produtos = useCatalog((s) => s.produtos);
+  const carregando = useCatalog((s) => s.carregando);
+  const produto = produtos.find((p) => p.id === Number(id));
 
   const adicionar = useCart((s) => s.adicionar);
   const mudarQtd = useCart((s) => s.mudarQtd);
   const { abrirCarrinho, mostrarToast } = useUi();
 
   const [qtd, setQtd] = useState(1);
+
+  if (carregando) {
+    return (
+      <div className="mx-auto max-w-conteudo px-5 py-20 text-center text-cinza">
+        Carregando…
+      </div>
+    );
+  }
 
   if (!produto) {
     return (
@@ -35,9 +45,9 @@ export default function ProductPage() {
     );
   }
 
-  const relacionados = PRODUTOS.filter(
-    (p) => p.cat === produto.cat && p.id !== produto.id,
-  ).slice(0, 4);
+  const relacionados = produtos
+    .filter((p) => p.cat === produto.cat && p.id !== produto.id)
+    .slice(0, 4);
 
   const adicionarAoCarrinho = () => {
     adicionar(produto.id);

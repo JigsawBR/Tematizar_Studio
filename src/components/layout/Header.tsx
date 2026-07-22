@@ -8,6 +8,7 @@ export default function Header() {
   const { busca, setBusca, abrirCarrinho } = useUi();
   const totalItens = useCart((s) => s.itens.reduce((soma, i) => soma + i.qtd, 0));
   const user = useAuth((s) => s.user);
+  const ehAdmin = useAuth((s) => s.ehAdmin);
   const sair = useAuth((s) => s.sair);
   const mostrarToast = useUi((s) => s.mostrarToast);
   const navigate = useNavigate();
@@ -86,12 +87,25 @@ export default function Header() {
               </Link>
               <span className="hidden md:block">
                 <b className="block font-extrabold">Olá, {primeiroNome}</b>
-                <button
-                  onClick={onSair}
-                  className="text-cinza transition hover:text-rosa-escuro"
-                >
-                  Sair
-                </button>
+                <span className="flex items-center gap-2">
+                  {ehAdmin && (
+                    <>
+                      <Link
+                        to="/admin"
+                        className="font-bold text-roxo-escuro transition hover:text-roxo"
+                      >
+                        Admin
+                      </Link>
+                      <span className="text-borda">·</span>
+                    </>
+                  )}
+                  <button
+                    onClick={onSair}
+                    className="text-cinza transition hover:text-rosa-escuro"
+                  >
+                    Sair
+                  </button>
+                </span>
               </span>
             </div>
           ) : (

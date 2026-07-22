@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "@/store/cart";
 import { useUi } from "@/store/ui";
 import { useAuth } from "@/store/auth";
+import { useCatalog } from "@/store/catalog";
 import { supabase } from "@/lib/supabase";
-import { PRODUTOS } from "@/data/products";
 import { brl } from "@/lib/format";
 import { WHATSAPP } from "@/config";
 import CakePlaceholder from "@/components/catalog/CakePlaceholder";
@@ -13,6 +13,7 @@ export default function CartDrawer() {
   const { itens, cupom, desconto, mudarQtd, remover, aplicarCupom } = useCart();
   const { carrinhoAberto, fecharCarrinho, mostrarToast } = useUi();
   const user = useAuth((s) => s.user);
+  const PRODUTOS = useCatalog((s) => s.produtos);
   const navigate = useNavigate();
   const [pagando, setPagando] = useState(false);
 
@@ -36,7 +37,7 @@ export default function CartDrawer() {
         const p = PRODUTOS.find((x) => x.id === i.id);
         return soma + (p ? p.preco * i.qtd : 0);
       }, 0),
-    [itens],
+    [itens, PRODUTOS],
   );
   const valorDesconto = subtotal * desconto;
   const total = subtotal - valorDesconto;

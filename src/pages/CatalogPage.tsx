@@ -1,8 +1,8 @@
 import { useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { PRODUTOS } from "@/data/products";
 import { produtosFiltrados } from "@/lib/catalog";
 import { useUi } from "@/store/ui";
+import { useCatalog } from "@/store/catalog";
 import Filters from "@/components/catalog/Filters";
 import SortBar from "@/components/catalog/SortBar";
 import ProductGrid from "@/components/catalog/ProductGrid";
@@ -10,6 +10,8 @@ import ProductGrid from "@/components/catalog/ProductGrid";
 export default function CatalogPage() {
   const [searchParams] = useSearchParams();
   const { categoria, busca, precoMin, precoMax, ordenar, setCategoria } = useUi();
+  const produtos = useCatalog((s) => s.produtos);
+  const carregando = useCatalog((s) => s.carregando);
 
   // sincroniza a categoria vinda da URL (?categoria=Datas) com o filtro
   const categoriaUrl = searchParams.get("categoria");
@@ -19,14 +21,14 @@ export default function CatalogPage() {
 
   const lista = useMemo(
     () =>
-      produtosFiltrados(PRODUTOS, {
+      produtosFiltrados(produtos, {
         categoria,
         busca,
         precoMin,
         precoMax,
         ordenar,
       }),
-    [categoria, busca, precoMin, precoMax, ordenar],
+    [produtos, categoria, busca, precoMin, precoMax, ordenar],
   );
 
   return (
@@ -54,7 +56,11 @@ export default function CatalogPage() {
         <Filters />
         <div>
           <SortBar quantidade={lista.length} />
-          <ProductGrid produtos={lista} />
+          {carregando ? (
+            <div className="py-16 text-center text-cinza">Carregando topos…</div>
+          ) : (
+            <ProductGrid produtos={lista} />
+          )}
         </div>
       </div>
     </>

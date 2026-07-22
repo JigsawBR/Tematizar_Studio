@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { PRODUTOS } from "@/data/products";
 import { useUi } from "@/store/ui";
+import { useCatalog } from "@/store/catalog";
 import SortBar from "@/components/catalog/SortBar";
 import ProductGrid from "@/components/catalog/ProductGrid";
 
@@ -13,14 +13,15 @@ interface Props {
 
 export default function CollectionView({ titulo, subtitulo, categorias }: Props) {
   const ordenar = useUi((s) => s.ordenar);
+  const produtos = useCatalog((s) => s.produtos);
 
   const lista = useMemo(() => {
-    const l = PRODUTOS.filter((p) => categorias.includes(p.cat));
+    const l = produtos.filter((p) => categorias.includes(p.cat));
     if (ordenar === "menor") l.sort((a, b) => a.preco - b.preco);
     if (ordenar === "maior") l.sort((a, b) => b.preco - a.preco);
     if (ordenar === "az") l.sort((a, b) => a.nome.localeCompare(b.nome));
     return l;
-  }, [categorias, ordenar]);
+  }, [produtos, categorias, ordenar]);
 
   return (
     <>

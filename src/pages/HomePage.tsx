@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { PRODUTOS } from "@/data/products";
+import { useCatalog } from "@/store/catalog";
 import ProductGrid from "@/components/catalog/ProductGrid";
 
 const CATEGORIAS_DESTAQUE: { nome: string; emoji: string }[] = [
@@ -18,7 +18,7 @@ const BENEFICIOS = [
 ];
 
 export default function HomePage() {
-  const destaques = PRODUTOS.slice(0, 8);
+  const destaques = useCatalog((s) => s.produtos).slice(0, 8);
 
   return (
     <>

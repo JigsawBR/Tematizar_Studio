@@ -7,6 +7,7 @@ interface AuthState {
   session: Session | null;
   user: User | null;
   carregando: boolean;
+  ehAdmin: boolean;
   entrar: (email: string, senha: string) => Promise<{ erro?: string }>;
   cadastrar: (
     email: string,
@@ -28,6 +29,7 @@ export const useAuth = create<AuthState>((_set, get) => ({
   session: null,
   user: null,
   carregando: true,
+  ehAdmin: false,
 
   entrar: async (email, senha) => {
     const { error } = await supabase.auth.signInWithPassword({
@@ -104,6 +106,13 @@ export const useAuth = create<AuthState>((_set, get) => ({
   },
 }));
 
+// Descobre se o usuário logado é admin (função is_admin() no banco).
+async function checarAdmin(user: User | null) {
+  if (!user) return useAuth.setState({ ehAdmin: false });
+  const { data } = await supabase.rpc("is_admin");
+  useAuth.setState({ ehAdmin: data === true });
+}
+
 // Mantém o store sincronizado com o Supabase (login, logout, refresh de token).
 // Em cada mudança, aponta o carrinho para o dono certo (cada conta tem o seu).
 supabase.auth.getSession().then(({ data }) => {
@@ -113,6 +122,7 @@ supabase.auth.getSession().then(({ data }) => {
     user: data.session?.user ?? null,
     carregando: false,
   });
+  void checarAdmin(data.session?.user ?? null);
 });
 
 supabase.auth.onAuthStateChange((_event, session) => {
@@ -122,6 +132,7 @@ supabase.auth.onAuthStateChange((_event, session) => {
     user: session?.user ?? null,
     carregando: false,
   });
+  void checarAdmin(session?.user ?? null);
 });
 
 function traduzErro(msg: string): string {

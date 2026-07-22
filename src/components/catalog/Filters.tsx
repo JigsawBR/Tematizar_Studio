@@ -1,5 +1,5 @@
 import { useUi } from "@/store/ui";
-import { PRODUTOS, CATEGORIAS } from "@/data/products";
+import { useCatalog } from "@/store/catalog";
 
 export default function Filters() {
   const {
@@ -10,8 +10,10 @@ export default function Filters() {
     setPrecoMin,
     setPrecoMax,
   } = useUi();
+  const produtos = useCatalog((s) => s.produtos);
+  const CATEGORIAS = useCatalog((s) => s.categorias);
 
-  const contar = (c: string) => PRODUTOS.filter((p) => p.cat === c).length;
+  const contar = (c: string) => produtos.filter((p) => p.cat === c).length;
 
   return (
     <aside className="flex flex-row gap-3.5 overflow-x-auto pb-1.5 md:sticky md:top-4 md:flex-col md:overflow-visible">
@@ -23,7 +25,7 @@ export default function Filters() {
         <div className="px-4.5 pb-4.5">
           <CatItem
             label="Ver todos"
-            n={PRODUTOS.length}
+            n={produtos.length}
             ativo={!categoria}
             onClick={() => setCategoria(null)}
           />

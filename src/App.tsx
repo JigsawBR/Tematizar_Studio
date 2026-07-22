@@ -13,6 +13,7 @@ import EntrarPage from "@/pages/EntrarPage";
 import RedefinirSenhaPage from "@/pages/RedefinirSenhaPage";
 import ContaPage from "@/pages/ContaPage";
 import PedidoStatusPage from "@/pages/PedidoStatusPage";
+import AdminPage from "@/pages/AdminPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
           <Route path="/conta" element={<ContaPage />} />
           <Route path="/pedido/:status" element={<PedidoStatusPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
