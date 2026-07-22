@@ -13,6 +13,7 @@ interface AuthState {
     nome: string,
     telefone: string,
   ) => Promise<{ erro?: string; precisaConfirmar?: boolean }>;
+  entrarComGoogle: (redirect?: string) => Promise<{ erro?: string }>;
   recuperarSenha: (email: string) => Promise<{ erro?: string }>;
   redefinirSenha: (novaSenha: string) => Promise<{ erro?: string }>;
   atualizarPerfil: (
@@ -46,6 +47,17 @@ export const useAuth = create<AuthState>((_set, get) => ({
     // Se confirmação de e-mail estiver ligada, não há sessão ainda.
     const precisaConfirmar = !data.session;
     return { precisaConfirmar };
+  },
+
+  // Login social. Redireciona para o Google e, no retorno, o Supabase
+  // cria/atualiza a conta (já verificada) e manda de volta para `redirect`.
+  entrarComGoogle: async (redirect = "/downloads") => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}${redirect}` },
+    });
+    if (error) return { erro: traduzErro(error.message) };
+    return {};
   },
 
   // Envia o e-mail com o link de recuperação. O link volta para
