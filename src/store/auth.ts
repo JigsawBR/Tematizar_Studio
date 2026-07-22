@@ -54,7 +54,7 @@ export const useAuth = create<AuthState>((_set, get) => ({
 
   // Login social. Redireciona para o Google e, no retorno, o Supabase
   // cria/atualiza a conta (já verificada) e manda de volta para `redirect`.
-  entrarComGoogle: async (redirect = "/downloads") => {
+  entrarComGoogle: async (redirect = "/") => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: `${window.location.origin}${redirect}` },

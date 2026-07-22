@@ -24,7 +24,7 @@ export default function Header() {
   const onSair = async () => {
     await sair();
     mostrarToast("Você saiu da conta. Até logo! 👋");
-    navigate("/");
+    navigate("/entrar");
   };
 
   const onBuscar = (e: React.FormEvent) => {

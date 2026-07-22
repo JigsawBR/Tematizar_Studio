@@ -8,7 +8,7 @@ type Aba = "entrar" | "cadastrar";
 export default function EntrarPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const destino = searchParams.get("redirect") || "/downloads";
+  const destino = searchParams.get("redirect") || "/";
 
   const { entrar, cadastrar, recuperarSenha, entrarComGoogle } = useAuth();
   const mostrarToast = useUi((s) => s.mostrarToast);

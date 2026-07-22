@@ -70,7 +70,7 @@ export default function ContaPage() {
   const onSair = async () => {
     await sair();
     mostrarToast("Você saiu da conta. Até logo! 👋");
-    navigate("/");
+    navigate("/entrar");
   };
 
   if (carregando) {
