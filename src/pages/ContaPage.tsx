@@ -5,6 +5,7 @@ import { useUi } from "@/store/ui";
 import { supabase } from "@/lib/supabase";
 import Icon from "@/components/ui/Icon";
 import Button from "@/components/ui/Button";
+import { mascaraTelefone, apenasDigitos } from "@/lib/telefone";
 
 export default function ContaPage() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export default function ContaPage() {
         (meta.name as string) ??
         "",
     );
-    setTelefone((meta.telefone as string) ?? "");
+    setTelefone(mascaraTelefone((meta.telefone as string) ?? ""));
     supabase
       .from("perfis")
       .select("nome, telefone")
@@ -40,7 +41,7 @@ export default function ContaPage() {
       .maybeSingle()
       .then(({ data }) => {
         if (data?.nome) setNome(data.nome);
-        if (data?.telefone) setTelefone(data.telefone);
+        if (data?.telefone) setTelefone(mascaraTelefone(data.telefone));
       });
   }, [user]);
 
@@ -48,7 +49,7 @@ export default function ContaPage() {
     e.preventDefault();
     setErroPerfil(null);
     setSalvandoPerfil(true);
-    const { erro } = await atualizarPerfil(nome, telefone);
+    const { erro } = await atualizarPerfil(nome, apenasDigitos(telefone));
     setSalvandoPerfil(false);
     if (erro) return setErroPerfil(erro);
     mostrarToast("Dados salvos!");
@@ -120,7 +121,7 @@ export default function ContaPage() {
             label="WhatsApp"
             type="tel"
             value={telefone}
-            onChange={setTelefone}
+            onChange={(v) => setTelefone(mascaraTelefone(v))}
             placeholder="(83) 9 9999-9999"
           />
           {erroPerfil && (

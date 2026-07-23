@@ -2,6 +2,7 @@ import { create } from "zustand";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import { useCart } from "@/store/cart";
+import { usePerfil } from "@/store/perfil";
 
 interface AuthState {
   session: Session | null;
@@ -113,6 +114,12 @@ async function checarAdmin(user: User | null) {
   useAuth.setState({ ehAdmin: data === true });
 }
 
+// Carrega o perfil (usado pelo onboarding e pela página da conta).
+function sincronizarPerfil(user: User | null) {
+  if (!user) return usePerfil.getState().limpar();
+  void usePerfil.getState().carregar(user.id);
+}
+
 // Mantém o store sincronizado com o Supabase (login, logout, refresh de token).
 // Em cada mudança, aponta o carrinho para o dono certo (cada conta tem o seu).
 supabase.auth.getSession().then(({ data }) => {
@@ -123,6 +130,7 @@ supabase.auth.getSession().then(({ data }) => {
     carregando: false,
   });
   void checarAdmin(data.session?.user ?? null);
+  sincronizarPerfil(data.session?.user ?? null);
 });
 
 supabase.auth.onAuthStateChange((_event, session) => {
@@ -133,6 +141,7 @@ supabase.auth.onAuthStateChange((_event, session) => {
     carregando: false,
   });
   void checarAdmin(session?.user ?? null);
+  sincronizarPerfil(session?.user ?? null);
 });
 
 function traduzErro(msg: string): string {
