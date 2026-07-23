@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
 import { WHATSAPP } from "@/config";
 import Icon from "@/components/ui/Icon";
+import Button from "@/components/ui/Button";
 
 const KITS = [
   { qtd: 3, desconto: "10% OFF", texto: "Escolha 3 topos e ganhe 10% de desconto." },
@@ -73,20 +73,19 @@ export default function KitDigitalPage() {
           Pronto para montar o seu kit?
         </p>
         <div className="flex flex-wrap justify-center gap-3">
-          <a
+          <Button
             href={`https://wa.me/${WHATSAPP}?text=${msgWhats}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl bg-[#25D366] px-7 py-3.5 font-titulo font-bold text-white transition hover:bg-[#1eb355]"
+            variant="whatsapp"
+            size="lg"
+            icon={<Icon name="chat" size={18} />}
           >
-            <Icon name="chat" size={18} /> Montar kit no WhatsApp
-          </a>
-          <Link
-            to="/catalogo"
-            className="rounded-2xl border-2 border-roxo px-7 py-3.5 font-titulo font-bold text-roxo-escuro transition hover:bg-roxo-claro"
-          >
+            Montar kit no WhatsApp
+          </Button>
+          <Button to="/catalogo" variant="outline" size="lg">
             Ver todos os topos
-          </Link>
+          </Button>
         </div>
       </div>
     </div>

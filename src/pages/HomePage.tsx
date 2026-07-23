@@ -3,6 +3,7 @@ import { useCatalog } from "@/store/catalog";
 import CakePlaceholder from "@/components/catalog/CakePlaceholder";
 import ProductGrid from "@/components/catalog/ProductGrid";
 import Icon, { type IconName } from "@/components/ui/Icon";
+import Button from "@/components/ui/Button";
 
 const CATEGORIAS_DESTAQUE: { nome: string; icon: IconName }[] = [
   { nome: "Meninas", icon: "crown" },
@@ -61,18 +62,17 @@ export default function HomePage() {
               de corte Silhouette.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link
+              <Button
                 to="/catalogo"
-                className="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-3.5 font-titulo text-[1.05rem] font-bold text-roxo-escuro shadow-marca transition hover:bg-creme"
+                variant="secondary"
+                size="lg"
+                iconRight={<Icon name="arrow" size={18} />}
               >
-                Ver todos os topos <span aria-hidden>→</span>
-              </Link>
-              <Link
-                to="/como-baixar"
-                className="inline-flex items-center gap-2 rounded-2xl border-2 border-white/70 px-7 py-3.5 font-titulo text-[1.05rem] font-bold text-white transition hover:bg-white/15"
-              >
+                Ver todos os topos
+              </Button>
+              <Button to="/como-baixar" variant="outline-light" size="lg">
                 Como baixar
-              </Link>
+              </Button>
             </div>
             <div className="mt-1 flex flex-wrap gap-5 font-corpo text-[0.82rem] font-bold">
               <span className="inline-flex items-center gap-1.5">

@@ -16,6 +16,7 @@ export default function CakePlaceholder({ produto, className }: Props) {
         src={produto.img}
         alt={produto.nome}
         loading="lazy"
+        decoding="async"
         className={className ?? "h-full w-full object-cover"}
       />
     );

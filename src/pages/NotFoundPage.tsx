@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Button from "@/components/ui/Button";
 
 export default function NotFoundPage() {
   return (
@@ -7,12 +7,9 @@ export default function NotFoundPage() {
       <p className="mb-6 text-cinza">
         O endereço que você tentou acessar não existe.
       </p>
-      <Link
-        to="/"
-        className="inline-block rounded-xl bg-roxo px-6 py-3 font-titulo font-bold text-white"
-      >
+      <Button to="/" variant="primary">
         Voltar ao início
-      </Link>
+      </Button>
     </div>
   );
 }

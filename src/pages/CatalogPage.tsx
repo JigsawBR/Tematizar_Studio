@@ -7,12 +7,16 @@ import Filters from "@/components/catalog/Filters";
 import SortBar from "@/components/catalog/SortBar";
 import ProductGrid from "@/components/catalog/ProductGrid";
 import { ProductCardSkeleton } from "@/components/ui/Skeleton";
+import Button from "@/components/ui/Button";
+import Icon from "@/components/ui/Icon";
 
 export default function CatalogPage() {
   const [searchParams] = useSearchParams();
   const { categoria, busca, precoMin, precoMax, ordenar, setCategoria } = useUi();
   const produtos = useCatalog((s) => s.produtos);
   const carregando = useCatalog((s) => s.carregando);
+  const erro = useCatalog((s) => s.erro);
+  const recarregar = useCatalog((s) => s.carregar);
 
   // sincroniza a categoria vinda da URL (?categoria=Datas) com o filtro
   const categoriaUrl = searchParams.get("categoria");
@@ -57,7 +61,21 @@ export default function CatalogPage() {
         <Filters />
         <div>
           <SortBar quantidade={lista.length} />
-          {carregando ? (
+          {erro ? (
+            <div className="flex flex-col items-center gap-4 py-16 text-center">
+              <span className="grid h-16 w-16 place-items-center rounded-full bg-rosa-claro text-rosa-escuro">
+                <Icon name="alert" size={28} />
+              </span>
+              <div className="text-cinza">
+                Não conseguimos carregar os topos.
+                <br />
+                Verifique sua conexão e tente de novo.
+              </div>
+              <Button variant="outline" onClick={() => recarregar()}>
+                Tentar de novo
+              </Button>
+            </div>
+          ) : carregando ? (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-5">
               {Array.from({ length: 8 }).map((_, i) => (
                 <ProductCardSkeleton key={i} />

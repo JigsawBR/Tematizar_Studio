@@ -51,9 +51,14 @@ export default {
           "50%": { opacity: "1" },
           "100%": { opacity: "0.55" },
         },
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(6px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         shimmer: "shimmer 1.4s ease-in-out infinite",
+        "fade-in": "fade-in 0.28s cubic-bezier(.22,1,.36,1)",
       },
     },
   },

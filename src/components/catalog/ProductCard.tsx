@@ -5,6 +5,7 @@ import { useCart } from "@/store/cart";
 import { useUi } from "@/store/ui";
 import CakePlaceholder from "@/components/catalog/CakePlaceholder";
 import Icon from "@/components/ui/Icon";
+import Button from "@/components/ui/Button";
 
 interface Props {
   produto: Produto;
@@ -45,12 +46,15 @@ export default function ProductCard({ produto }: Props) {
             no Studio
           </small>
         </div>
-        <button
+        <Button
+          variant="primary"
+          full
           onClick={comprar}
-          className="mt-auto flex items-center justify-center gap-2 rounded-xl bg-roxo py-2.5 font-titulo font-bold text-white transition hover:bg-roxo-escuro"
+          className="mt-auto"
+          iconRight={<Icon name="cart" size={17} />}
         >
-          Comprar <Icon name="cart" size={17} />
-        </button>
+          Comprar
+        </Button>
       </div>
     </article>
   );

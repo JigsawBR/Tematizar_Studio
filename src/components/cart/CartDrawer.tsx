@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabase";
 import { brl } from "@/lib/format";
 import CakePlaceholder from "@/components/catalog/CakePlaceholder";
 import Icon from "@/components/ui/Icon";
+import Button from "@/components/ui/Button";
 
 export default function CartDrawer() {
   const { itens, cupom, desconto, mudarQtd, remover, aplicarCupom } = useCart();
@@ -182,12 +183,9 @@ export default function CartDrawer() {
                 placeholder="Cupom de desconto"
                 className="flex-1 rounded-[10px] border-2 border-borda px-3.5 py-2.5 font-corpo font-bold uppercase focus:border-roxo focus:outline-none"
               />
-              <button
-                onClick={onAplicarCupom}
-                className="rounded-[10px] bg-ameixa px-4 font-titulo font-bold text-white"
-              >
+              <Button variant="dark" onClick={onAplicarCupom}>
                 Aplicar
-              </button>
+              </Button>
             </div>
             {cupomMsg && (
               <div
@@ -214,20 +212,20 @@ export default function CartDrawer() {
               <b className="text-roxo-escuro">{brl(total)}</b>
             </div>
 
-            <button
-              onClick={pagarMercadoPago}
+            <Button
+              variant="primary"
+              size="lg"
+              full
               disabled={pagando}
-              className="flex w-full items-center justify-center gap-2.5 rounded-[14px] bg-roxo py-3.5 font-titulo text-[1.05rem] font-bold text-white transition hover:bg-roxo-escuro disabled:opacity-60"
+              onClick={pagarMercadoPago}
+              icon={pagando ? undefined : <Icon name="card" size={20} />}
             >
-              {pagando ? (
-                "Abrindo pagamento..."
-              ) : (
-                <>
-                  <Icon name="card" size={20} /> Pagar (PIX ou cartão)
-                </>
-              )}
-            </button>
-            <p className="mt-2.5 text-center text-[0.78rem] text-cinza">
+              {pagando ? "Abrindo pagamento..." : "Pagar (PIX ou cartão)"}
+            </Button>
+            <div className="mt-3 flex items-center justify-center gap-1.5 text-[0.72rem] font-bold text-cinza">
+              <Icon name="lock" size={13} /> Pagamento seguro via Mercado Pago
+            </div>
+            <p className="mt-1.5 text-center text-[0.75rem] text-cinza">
               Após o pagamento, seu arquivo fica em “Meus Downloads” para baixar.
             </p>
           </div>

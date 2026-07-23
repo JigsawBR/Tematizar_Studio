@@ -8,6 +8,7 @@ import CakePlaceholder from "@/components/catalog/CakePlaceholder";
 import ProductGrid from "@/components/catalog/ProductGrid";
 import Icon from "@/components/ui/Icon";
 import Skeleton from "@/components/ui/Skeleton";
+import Button from "@/components/ui/Button";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -43,12 +44,9 @@ export default function ProductPage() {
         <p className="mb-6 text-cinza">
           Este topo não existe ou saiu do catálogo.
         </p>
-        <Link
-          to="/catalogo"
-          className="inline-block rounded-xl bg-roxo px-6 py-3 font-titulo font-bold text-white"
-        >
+        <Button to="/catalogo" variant="primary">
           Voltar ao catálogo
-        </Link>
+        </Button>
       </div>
     );
   }
@@ -135,12 +133,16 @@ export default function ProductPage() {
             </div>
           </div>
 
-          <button
+          <Button
+            variant="primary"
+            size="lg"
+            full
             onClick={adicionarAoCarrinho}
-            className="flex items-center justify-center gap-2 rounded-2xl bg-roxo py-4 font-titulo text-lg font-bold text-white transition hover:bg-roxo-escuro"
+            className="py-4 text-lg"
+            iconRight={<Icon name="cart" size={20} />}
           >
-            Adicionar ao carrinho <Icon name="cart" size={20} />
-          </button>
+            Adicionar ao carrinho
+          </Button>
 
           <div className="rounded-xl2 border border-borda bg-creme p-4 text-[0.85rem] text-cinza">
             <p>

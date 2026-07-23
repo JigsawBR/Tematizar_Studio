@@ -9,6 +9,7 @@ interface CatalogState {
   produtos: Produto[];
   categorias: string[];
   carregando: boolean;
+  erro: boolean;
   carregar: () => Promise<void>;
 }
 
@@ -45,31 +46,40 @@ export const useCatalog = create<CatalogState>((set) => ({
   produtos: [],
   categorias: [],
   carregando: true,
+  erro: false,
 
   carregar: async () => {
-    const [prod, cat] = await Promise.all([
-      supabase
-        .from("produtos")
-        .select(
-          "numero, slug, nome, preco_centavos, descricao, emoji, cor_primaria, cor_secundaria, imagem_url, categorias(nome)",
-        )
-        .eq("ativo", true)
-        // "destaque" (padrão): os em destaque primeiro, depois pela ordem estável.
-        .order("destaque", { ascending: false })
-        .order("numero", { ascending: true }),
-      supabase
-        .from("categorias")
-        .select("nome, ordem")
-        .order("ordem", { ascending: true }),
-    ]);
+    set({ carregando: true, erro: false });
+    try {
+      const [prod, cat] = await Promise.all([
+        supabase
+          .from("produtos")
+          .select(
+            "numero, slug, nome, preco_centavos, descricao, emoji, cor_primaria, cor_secundaria, imagem_url, categorias(nome)",
+          )
+          .eq("ativo", true)
+          // "destaque" (padrão): os em destaque primeiro, depois pela ordem estável.
+          .order("destaque", { ascending: false })
+          .order("numero", { ascending: true }),
+        supabase
+          .from("categorias")
+          .select("nome, ordem")
+          .order("ordem", { ascending: true }),
+      ]);
 
-    const linhas = (prod.data as unknown as LinhaProduto[] | null) ?? [];
-    const cats = (cat.data as { nome: string }[] | null) ?? [];
-    set({
-      produtos: linhas.map(mapear),
-      categorias: cats.map((c) => c.nome),
-      carregando: false,
-    });
+      if (prod.error || cat.error) throw prod.error ?? cat.error;
+
+      const linhas = (prod.data as unknown as LinhaProduto[] | null) ?? [];
+      const cats = (cat.data as { nome: string }[] | null) ?? [];
+      set({
+        produtos: linhas.map(mapear),
+        categorias: cats.map((c) => c.nome),
+        carregando: false,
+        erro: false,
+      });
+    } catch {
+      set({ carregando: false, erro: true });
+    }
   },
 }));
 

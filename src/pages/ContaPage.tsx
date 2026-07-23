@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/store/auth";
 import { useUi } from "@/store/ui";
 import { supabase } from "@/lib/supabase";
 import Icon from "@/components/ui/Icon";
+import Button from "@/components/ui/Button";
 
 export default function ContaPage() {
   const navigate = useNavigate();
@@ -95,12 +96,9 @@ export default function ContaPage() {
           <p className="mb-6 text-[0.9rem] text-cinza">
             Faça login para gerenciar seus dados e sua senha.
           </p>
-          <Link
-            to="/entrar?redirect=/conta"
-            className="block w-full rounded-xl bg-roxo py-3 font-titulo font-bold text-white transition hover:bg-roxo-escuro"
-          >
+          <Button to="/entrar?redirect=/conta" variant="primary" full>
             Entrar
-          </Link>
+          </Button>
         </div>
       </div>
     );
@@ -130,13 +128,15 @@ export default function ContaPage() {
               {erroPerfil}
             </div>
           )}
-          <button
+          <Button
             type="submit"
+            variant="primary"
+            full
             disabled={salvandoPerfil}
-            className="mt-1 rounded-xl bg-roxo py-3 font-titulo font-bold text-white transition hover:bg-roxo-escuro disabled:opacity-60"
+            className="mt-1"
           >
             {salvandoPerfil ? "Salvando..." : "Salvar dados"}
-          </button>
+          </Button>
         </form>
       </section>
 
@@ -165,29 +165,29 @@ export default function ContaPage() {
               {erroSenha}
             </div>
           )}
-          <button
+          <Button
             type="submit"
+            variant="primary"
+            full
             disabled={salvandoSenha}
-            className="mt-1 rounded-xl bg-roxo py-3 font-titulo font-bold text-white transition hover:bg-roxo-escuro disabled:opacity-60"
+            className="mt-1"
           >
             {salvandoSenha ? "Salvando..." : "Alterar senha"}
-          </button>
+          </Button>
         </form>
       </section>
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Link
-          to="/downloads"
-          className="flex-1 rounded-xl border-2 border-roxo py-3 text-center font-titulo font-bold text-roxo-escuro transition hover:bg-roxo-claro"
-        >
+        <Button to="/downloads" variant="outline" className="flex-1">
           Meus downloads
-        </Link>
-        <button
+        </Button>
+        <Button
+          variant="outline"
           onClick={onSair}
-          className="flex-1 rounded-xl border-2 border-borda py-3 font-titulo font-bold text-cinza transition hover:border-rosa hover:text-rosa-escuro"
+          className="flex-1 border-borda text-cinza hover:border-rosa hover:bg-transparent hover:text-rosa-escuro"
         >
           Sair da conta
-        </button>
+        </Button>
       </div>
     </div>
   );

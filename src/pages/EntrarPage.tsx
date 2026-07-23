@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/store/auth";
 import { useUi } from "@/store/ui";
+import Button from "@/components/ui/Button";
 
 type Aba = "entrar" | "cadastrar";
 
@@ -93,12 +94,9 @@ export default function EntrarPage() {
                 Se existir uma conta com <b>{email}</b>, enviamos um link para
                 redefinir a senha. Confira sua caixa de entrada (e o spam).
               </p>
-              <button
-                onClick={irParaLogin}
-                className="w-full rounded-xl bg-roxo py-3.5 font-titulo font-bold text-white transition hover:bg-roxo-escuro"
-              >
+              <Button variant="primary" full onClick={irParaLogin}>
                 Voltar ao login
-              </button>
+              </Button>
             </>
           ) : (
             <>
@@ -120,13 +118,15 @@ export default function EntrarPage() {
                     {erro}
                   </div>
                 )}
-                <button
+                <Button
                   type="submit"
+                  variant="primary"
+                  full
                   disabled={enviando}
-                  className="mt-2 rounded-xl bg-roxo py-3.5 font-titulo font-bold text-white transition hover:bg-roxo-escuro disabled:opacity-60"
+                  className="mt-2"
                 >
                   {enviando ? "Enviando..." : "Enviar link"}
-                </button>
+                </Button>
               </form>
               <button
                 onClick={irParaLogin}
@@ -163,15 +163,16 @@ export default function EntrarPage() {
             : "Rápido e grátis. Depois é só comprar e baixar."}
         </p>
 
-        <button
+        <Button
           type="button"
+          variant="outline"
+          full
           onClick={onGoogle}
           disabled={enviando}
-          className="flex w-full items-center justify-center gap-3 rounded-xl border-2 border-borda bg-white py-3 font-titulo font-bold text-ameixa transition hover:bg-creme disabled:opacity-60"
+          icon={<GoogleIcon />}
         >
-          <GoogleIcon />
           {aba === "entrar" ? "Entrar com Google" : "Cadastrar com Google"}
-        </button>
+        </Button>
 
         <div className="my-5 flex items-center gap-3 text-[0.75rem] font-bold text-cinza">
           <span className="h-px flex-1 bg-borda" />
@@ -239,17 +240,19 @@ export default function EntrarPage() {
             </div>
           )}
 
-          <button
+          <Button
             type="submit"
+            variant="primary"
+            full
             disabled={enviando}
-            className="mt-2 rounded-xl bg-roxo py-3.5 font-titulo font-bold text-white transition hover:bg-roxo-escuro disabled:opacity-60"
+            className="mt-2"
           >
             {enviando
               ? "Aguarde..."
               : aba === "entrar"
                 ? "Entrar"
                 : "Criar conta"}
-          </button>
+          </Button>
         </form>
 
         <p className="mt-6 text-center text-[0.8rem] text-cinza">

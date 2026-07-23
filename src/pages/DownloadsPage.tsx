@@ -4,6 +4,8 @@ import { useAuth } from "@/store/auth";
 import { useUi } from "@/store/ui";
 import { supabase } from "@/lib/supabase";
 import Icon from "@/components/ui/Icon";
+import Button from "@/components/ui/Button";
+import Skeleton from "@/components/ui/Skeleton";
 
 interface LinhaDownload {
   id: string;
@@ -72,12 +74,9 @@ export default function DownloadsPage() {
             Faça login para ver seu histórico de compras e baixar novamente seus
             topos.
           </p>
-          <Link
-            to="/entrar?redirect=/downloads"
-            className="mb-3 block w-full rounded-xl bg-roxo py-3 font-titulo font-bold text-white transition hover:bg-roxo-escuro"
-          >
+          <Button to="/entrar?redirect=/downloads" variant="primary" full className="mb-3">
             Entrar
-          </Link>
+          </Button>
           <p className="text-[0.8rem] text-cinza">
             Ainda não comprou?{" "}
             <Link to="/catalogo" className="font-bold text-roxo-escuro hover:underline">
@@ -86,7 +85,21 @@ export default function DownloadsPage() {
           </p>
         </div>
       ) : buscando ? (
-        <div className="py-16 text-center text-cinza">Carregando compras...</div>
+        <div className="flex flex-col gap-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex items-center gap-4 rounded-xl2 border border-borda bg-white p-4"
+            >
+              <Skeleton className="h-14 w-14 shrink-0" />
+              <div className="flex-1">
+                <Skeleton className="h-4 w-2/5" />
+                <Skeleton className="mt-2 h-3 w-24" />
+              </div>
+              <Skeleton className="h-9 w-20 rounded-xl" />
+            </div>
+          ))}
+        </div>
       ) : linhas.length === 0 ? (
         <div className="rounded-xl2 border border-borda bg-white p-10 text-center shadow-marca">
           <span className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-roxo-claro text-roxo-escuro">
@@ -98,12 +111,9 @@ export default function DownloadsPage() {
           <p className="mb-6 text-[0.9rem] text-cinza">
             Quando você comprar um topo, ele aparece aqui para download.
           </p>
-          <Link
-            to="/catalogo"
-            className="inline-block rounded-xl bg-roxo px-6 py-3 font-titulo font-bold text-white"
-          >
+          <Button to="/catalogo" variant="primary">
             Escolher meus topos
-          </Link>
+          </Button>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -122,12 +132,15 @@ export default function DownloadsPage() {
                 <p className="text-[0.82rem] text-cinza">Compra confirmada</p>
               </div>
               {l.arquivo_path ? (
-                <button
+                <Button
+                  variant="primary"
+                  size="sm"
                   onClick={() => baixar(l.produto_id)}
-                  className="shrink-0 rounded-xl bg-roxo px-5 py-2.5 font-titulo text-sm font-bold text-white transition hover:bg-roxo-escuro"
+                  className="shrink-0"
+                  icon={<Icon name="download" size={16} />}
                 >
                   Baixar
-                </button>
+                </Button>
               ) : (
                 <span className="shrink-0 rounded-xl border-2 border-borda px-4 py-2 font-titulo text-sm font-bold text-cinza">
                   Em preparação

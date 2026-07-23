@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import PromoBar from "@/components/layout/PromoBar";
 import Header from "@/components/layout/Header";
 import Nav from "@/components/layout/Nav";
@@ -8,6 +8,7 @@ import CartDrawer from "@/components/cart/CartDrawer";
 import Toast from "@/components/ui/Toast";
 
 export default function Layout() {
+  const location = useLocation();
   return (
     <div className="flex min-h-screen flex-col">
       <ScrollToTop />
@@ -17,7 +18,10 @@ export default function Layout() {
         <Nav />
       </div>
       <main className="flex-1">
-        <Outlet />
+        {/* Fade suave a cada mudança de rota (remonta pela key). */}
+        <div key={location.pathname} className="animate-fade-in">
+          <Outlet />
+        </div>
       </main>
       <Footer />
       <CartDrawer />

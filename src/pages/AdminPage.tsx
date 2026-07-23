@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { brl } from "@/lib/format";
 import { slugify } from "@/lib/slug";
 import Icon from "@/components/ui/Icon";
+import Button from "@/components/ui/Button";
 
 interface Categoria {
   id: string;
@@ -168,12 +169,13 @@ export default function AdminPage() {
             {produtos.length} produtos · edições aparecem na loja na hora.
           </p>
         </div>
-        <button
+        <Button
           onClick={() => setForm(formVazio(categorias[0]?.id ?? ""))}
-          className="shrink-0 rounded-xl bg-roxo px-5 py-3 font-titulo font-bold text-white transition hover:bg-roxo-escuro"
+          variant="primary"
+          className="shrink-0"
         >
           ＋ Novo produto
-        </button>
+        </Button>
       </div>
 
       {carregando ? (
@@ -530,13 +532,15 @@ function ProdutoModal({
             </div>
           )}
 
-          <button
+          <Button
             onClick={salvar}
+            variant="primary"
+            full
             disabled={salvando || subindo !== null}
-            className="mt-2 rounded-xl bg-roxo py-3 font-titulo font-bold text-white transition hover:bg-roxo-escuro disabled:opacity-60"
+            className="mt-2"
           >
             {salvando ? "Salvando…" : "Salvar produto"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
