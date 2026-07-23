@@ -6,7 +6,6 @@ import { useAuth } from "@/store/auth";
 import { useCatalog } from "@/store/catalog";
 import { supabase } from "@/lib/supabase";
 import { brl } from "@/lib/format";
-import { WHATSAPP } from "@/config";
 import CakePlaceholder from "@/components/catalog/CakePlaceholder";
 
 export default function CartDrawer() {
@@ -50,24 +49,6 @@ export default function CartDrawer() {
     } else {
       setCupomMsg({ texto: "✖ Cupom inválido.", ok: false });
     }
-  };
-
-  const finalizarWhats = () => {
-    if (itens.length === 0) return;
-    let txt = "Olá! Quero comprar estes topos de bolo:\n\n";
-    itens.forEach((i) => {
-      const p = PRODUTOS.find((x) => x.id === i.id);
-      if (!p) return;
-      txt += `• ${p.nome} (x${i.qtd}) — ${brl(p.preco * i.qtd)}\n`;
-    });
-    txt += `\nSubtotal: ${brl(subtotal)}\n`;
-    if (desconto > 0) txt += `Cupom ${cupom}: -${brl(valorDesconto)}\n`;
-    txt += `*Total: ${brl(total)}*`;
-    window.open(
-      `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(txt)}`,
-      "_blank",
-      "noopener",
-    );
   };
 
   const pagarMercadoPago = async () => {
@@ -224,16 +205,14 @@ export default function CartDrawer() {
             <button
               onClick={pagarMercadoPago}
               disabled={pagando}
-              className="mb-2.5 flex w-full items-center justify-center gap-2.5 rounded-[14px] bg-roxo py-3.5 font-titulo text-[1.05rem] font-bold text-white transition hover:bg-roxo-escuro disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2.5 rounded-[14px] bg-roxo py-3.5 font-titulo text-[1.05rem] font-bold text-white transition hover:bg-roxo-escuro disabled:opacity-60"
             >
               {pagando ? "Abrindo pagamento..." : "💳 Pagar (PIX ou cartão)"}
             </button>
-            <button
-              onClick={finalizarWhats}
-              className="flex w-full items-center justify-center gap-2.5 rounded-[14px] border-2 border-[#25D366] py-3 font-titulo text-[0.95rem] font-bold text-[#1eb355] transition hover:bg-[#25D366]/10"
-            >
-              💬 Prefiro combinar pelo WhatsApp
-            </button>
+            <p className="mt-2.5 text-center text-[0.78rem] text-cinza">
+              📥 Após o pagamento, seu arquivo fica em “Meus Downloads” para
+              baixar.
+            </p>
           </div>
         )}
       </aside>

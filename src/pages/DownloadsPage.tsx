@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/store/auth";
 import { useUi } from "@/store/ui";
 import { supabase } from "@/lib/supabase";
-import { WHATSAPP } from "@/config";
 
 interface LinhaDownload {
   id: string;
@@ -125,14 +124,9 @@ export default function DownloadsPage() {
                   Baixar
                 </button>
               ) : (
-                <a
-                  href={`https://wa.me/${WHATSAPP}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="shrink-0 rounded-xl border-2 border-roxo px-4 py-2 font-titulo text-sm font-bold text-roxo-escuro"
-                >
-                  Receber no WhatsApp
-                </a>
+                <span className="shrink-0 rounded-xl border-2 border-borda px-4 py-2 font-titulo text-sm font-bold text-cinza">
+                  Em preparação
+                </span>
               )}
             </div>
           ))}
