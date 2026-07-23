@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCatalog } from "@/store/catalog";
+import CakePlaceholder from "@/components/catalog/CakePlaceholder";
 import ProductGrid from "@/components/catalog/ProductGrid";
 
 const CATEGORIAS_DESTAQUE: { nome: string; emoji: string }[] = [
@@ -17,39 +18,88 @@ const BENEFICIOS = [
   { emoji: "💬", titulo: "Suporte no WhatsApp", texto: "Tire dúvidas e finalize seu pedido pelo WhatsApp." },
 ];
 
+// Bolinhas decorativas espalhadas pelo hero (posição/ tamanho/ cor fixos).
+const BOLINHAS: React.CSSProperties[] = [
+  { top: "14%", left: "6%", width: 12, height: 12, background: "var(--creme, #FBF4E7)" },
+  { top: "70%", left: "10%", width: 20, height: 20, background: "#E896BE" },
+  { top: "24%", left: "44%", width: 9, height: 9, background: "var(--creme, #FBF4E7)" },
+  { top: "80%", left: "38%", width: 13, height: 13, background: "#FBE6F0" },
+  { top: "12%", right: "8%", width: 16, height: 16, background: "#FBE6F0" },
+  { top: "60%", right: "5%", width: 11, height: 11, background: "var(--creme, #FBF4E7)" },
+];
+
 export default function HomePage() {
-  const destaques = useCatalog((s) => s.produtos).slice(0, 8);
+  const produtos = useCatalog((s) => s.produtos);
+  const destaques = produtos.slice(0, 8);
+  // Três topos reais para o "colar" flutuante do hero.
+  const colar = [produtos[0], produtos[3], produtos[5]];
 
   return (
     <>
       {/* HERO */}
-      <section className="bg-gradient-to-br from-roxo via-roxo-escuro to-rosa text-white">
-        <div className="mx-auto flex max-w-conteudo flex-col items-center gap-6 px-5 py-16 text-center">
-          <img
-            src="/logo.jpeg"
-            alt="Tematizar Studio"
-            className="h-24 w-24 rounded-full object-cover shadow-marca ring-4 ring-white/40"
+      <section className="relative overflow-hidden bg-gradient-to-br from-roxo via-roxo-escuro to-rosa text-white">
+        {BOLINHAS.map((s, i) => (
+          <span
+            key={i}
+            className="pointer-events-none absolute rounded-full opacity-50"
+            style={s}
           />
-          <h1 className="max-w-2xl text-3xl font-extrabold leading-tight sm:text-5xl">
-            Topos de bolo digitais para deixar sua festa linda
-          </h1>
-          <p className="max-w-xl text-[1.05rem] opacity-90">
-            Arquivos prontos para imprimir e montar. Escolha, baixe e monte —
-            simples assim.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              to="/catalogo"
-              className="rounded-2xl bg-white px-7 py-3.5 font-titulo text-[1.05rem] font-bold text-roxo-escuro shadow-marca transition hover:bg-creme"
-            >
-              Ver todos os topos 🎂
-            </Link>
-            <Link
-              to="/como-baixar"
-              className="rounded-2xl border-2 border-white/70 px-7 py-3.5 font-titulo text-[1.05rem] font-bold text-white transition hover:bg-white/15"
-            >
-              Como baixar
-            </Link>
+        ))}
+        <div className="mx-auto grid max-w-conteudo grid-cols-1 items-center gap-10 px-5 py-14 md:grid-cols-[1.1fr_0.9fr] md:py-16">
+          {/* coluna de texto */}
+          <div className="flex flex-col items-start gap-5">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/[0.18] px-3.5 py-1.5 font-titulo text-[0.78rem] font-bold tracking-wide">
+              ✨ Arquivos digitais para imprimir e montar
+            </span>
+            <h1 className="font-titulo text-[clamp(2rem,4.2vw,3.15rem)] font-extrabold leading-[1.08] tracking-tight">
+              Topos de bolo digitais para deixar sua festa{" "}
+              <span className="text-creme">linda</span>
+            </h1>
+            <p className="max-w-[460px] text-[1.05rem] leading-relaxed opacity-90">
+              Escolha o tema, baixe na hora e monte em casa. Prontos para máquina
+              de corte Silhouette.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/catalogo"
+                className="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-3.5 font-titulo text-[1.05rem] font-bold text-roxo-escuro shadow-marca transition hover:bg-creme"
+              >
+                Ver todos os topos <span aria-hidden>→</span>
+              </Link>
+              <Link
+                to="/como-baixar"
+                className="inline-flex items-center gap-2 rounded-2xl border-2 border-white/70 px-7 py-3.5 font-titulo text-[1.05rem] font-bold text-white transition hover:bg-white/15"
+              >
+                Como baixar
+              </Link>
+            </div>
+            <div className="mt-1 flex flex-wrap gap-5 font-corpo text-[0.82rem] font-bold">
+              <span className="inline-flex items-center gap-1.5">
+                <span aria-hidden>✓</span> Download imediato
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span aria-hidden>✓</span> Pagamento via PIX
+              </span>
+            </div>
+          </div>
+
+          {/* colar de bolos flutuantes (só no desktop) */}
+          <div className="relative hidden h-[320px] md:block">
+            {colar[0] && (
+              <div className="absolute right-[8%] top-0 h-[190px] w-[190px] -rotate-[5deg] overflow-hidden rounded-xl2 border-4 border-white shadow-marca-hover">
+                <CakePlaceholder produto={colar[0]} />
+              </div>
+            )}
+            {colar[1] && (
+              <div className="absolute bottom-0 left-[4%] h-[150px] w-[150px] rotate-[6deg] overflow-hidden rounded-xl2 border-4 border-white shadow-marca-hover">
+                <CakePlaceholder produto={colar[1]} />
+              </div>
+            )}
+            {colar[2] && (
+              <div className="absolute right-[40%] top-[38%] h-[118px] w-[118px] -rotate-2 overflow-hidden rounded-xl border-4 border-white shadow-marca-hover">
+                <CakePlaceholder produto={colar[2]} />
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -61,7 +111,9 @@ export default function HomePage() {
             key={b.titulo}
             className="flex items-start gap-3 rounded-xl2 border border-borda bg-white p-4 shadow-marca"
           >
-            <span className="text-3xl">{b.emoji}</span>
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-roxo-claro text-2xl">
+              {b.emoji}
+            </span>
             <div>
               <h3 className="font-titulo text-base font-bold text-roxo-escuro">
                 {b.titulo}
@@ -74,15 +126,25 @@ export default function HomePage() {
 
       {/* CATEGORIAS */}
       <section className="mx-auto max-w-conteudo px-5 py-6">
-        <h2 className="mb-4 text-2xl font-extrabold">Escolha por tema</h2>
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <h2 className="text-2xl font-extrabold sm:text-3xl">Escolha por tema</h2>
+          <Link
+            to="/catalogo"
+            className="whitespace-nowrap font-titulo text-sm font-bold text-roxo-escuro hover:underline"
+          >
+            Ver todos →
+          </Link>
+        </div>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {CATEGORIAS_DESTAQUE.map((c) => (
             <Link
               key={c.nome}
               to={`/catalogo?categoria=${encodeURIComponent(c.nome)}`}
-              className="flex flex-col items-center gap-2 rounded-xl2 border border-borda bg-roxo-claro p-5 text-center shadow-marca transition hover:-translate-y-1 hover:shadow-marca-hover"
+              className="flex flex-col items-center gap-2.5 rounded-xl2 border border-borda bg-roxo-claro p-5 text-center shadow-marca transition hover:-translate-y-1 hover:shadow-marca-hover"
             >
-              <span className="text-4xl">{c.emoji}</span>
+              <span className="grid h-[54px] w-[54px] place-items-center rounded-full bg-white text-3xl shadow-marca">
+                {c.emoji}
+              </span>
               <span className="font-titulo text-[0.9rem] font-bold text-roxo-escuro">
                 {c.nome}
               </span>
@@ -93,11 +155,11 @@ export default function HomePage() {
 
       {/* DESTAQUES */}
       <section className="mx-auto max-w-conteudo px-5 py-8">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-extrabold">Mais queridinhos</h2>
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <h2 className="text-2xl font-extrabold sm:text-3xl">Mais queridinhos</h2>
           <Link
             to="/catalogo"
-            className="font-titulo text-sm font-bold text-roxo-escuro hover:underline"
+            className="whitespace-nowrap font-titulo text-sm font-bold text-roxo-escuro hover:underline"
           >
             Ver todos →
           </Link>
