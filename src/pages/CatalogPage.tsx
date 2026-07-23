@@ -6,6 +6,7 @@ import { useCatalog } from "@/store/catalog";
 import Filters from "@/components/catalog/Filters";
 import SortBar from "@/components/catalog/SortBar";
 import ProductGrid from "@/components/catalog/ProductGrid";
+import { ProductCardSkeleton } from "@/components/ui/Skeleton";
 
 export default function CatalogPage() {
   const [searchParams] = useSearchParams();
@@ -57,7 +58,11 @@ export default function CatalogPage() {
         <div>
           <SortBar quantidade={lista.length} />
           {carregando ? (
-            <div className="py-16 text-center text-cinza">Carregando topos…</div>
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-5">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
+            </div>
           ) : (
             <ProductGrid produtos={lista} />
           )}

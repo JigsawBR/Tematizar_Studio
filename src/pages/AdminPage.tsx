@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 import { useAuth } from "@/store/auth";
 import { useCatalog } from "@/store/catalog";
 import { useUi } from "@/store/ui";
@@ -262,6 +263,15 @@ function ProdutoModal({
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [subindo, setSubindo] = useState<"imagem" | "arquivo" | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(true, modalRef);
+
+  // Fecha o modal com Esc.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onFechar();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onFechar]);
 
   const set = <K extends keyof Form>(campo: K, valor: Form[K]) =>
     setForm({ ...form, [campo]: valor });
@@ -358,8 +368,13 @@ function ProdutoModal({
       onClick={onFechar}
     >
       <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={form.id ? "Editar produto" : "Novo produto"}
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="my-6 w-full max-w-lg rounded-xl2 border border-borda bg-white p-6 shadow-marca"
+        className="my-6 w-full max-w-lg rounded-xl2 border border-borda bg-white p-6 shadow-marca outline-none"
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="font-titulo text-xl font-bold text-roxo-escuro">

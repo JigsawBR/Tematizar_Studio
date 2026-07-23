@@ -7,6 +7,7 @@ import { useCatalog } from "@/store/catalog";
 import CakePlaceholder from "@/components/catalog/CakePlaceholder";
 import ProductGrid from "@/components/catalog/ProductGrid";
 import Icon from "@/components/ui/Icon";
+import Skeleton from "@/components/ui/Skeleton";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -22,8 +23,15 @@ export default function ProductPage() {
 
   if (carregando) {
     return (
-      <div className="mx-auto max-w-conteudo px-5 py-20 text-center text-cinza">
-        Carregando…
+      <div className="mx-auto grid max-w-conteudo grid-cols-1 gap-8 px-5 py-8 md:grid-cols-2">
+        <Skeleton className="aspect-square rounded-xl2" />
+        <div className="flex flex-col gap-4">
+          <Skeleton className="h-6 w-24 rounded-full" />
+          <Skeleton className="h-9 w-4/5" />
+          <Skeleton className="h-10 w-40" />
+          <Skeleton className="h-20 w-full" />
+          <Skeleton className="mt-2 h-14 w-full rounded-2xl" />
+        </div>
       </div>
     );
   }

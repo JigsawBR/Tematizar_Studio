@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/store/cart";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 import { useUi } from "@/store/ui";
 import { useAuth } from "@/store/auth";
 import { useCatalog } from "@/store/catalog";
@@ -15,6 +16,8 @@ export default function CartDrawer() {
   const user = useAuth((s) => s.user);
   const PRODUTOS = useCatalog((s) => s.produtos);
   const navigate = useNavigate();
+  const drawerRef = useRef<HTMLElement>(null);
+  useFocusTrap(carrinhoAberto, drawerRef);
   const [pagando, setPagando] = useState(false);
 
   const [codigoCupom, setCodigoCupom] = useState("");
@@ -92,9 +95,13 @@ export default function CartDrawer() {
 
       {/* drawer */}
       <aside
+        ref={drawerRef}
+        role="dialog"
+        aria-modal="true"
         aria-label="Carrinho de compras"
         aria-hidden={!carrinhoAberto}
-        className={`fixed right-0 top-0 z-50 flex h-full w-[400px] max-w-[90vw] flex-col bg-white shadow-[-10px_0_40px_rgba(0,0,0,.2)] transition-transform duration-300 ${
+        tabIndex={-1}
+        className={`fixed right-0 top-0 z-50 flex h-full w-[400px] max-w-[90vw] flex-col bg-white shadow-[-10px_0_40px_rgba(0,0,0,.2)] outline-none transition-transform duration-300 ${
           carrinhoAberto ? "translate-x-0" : "translate-x-full"
         }`}
       >

@@ -38,6 +38,23 @@ export default {
       maxWidth: {
         conteudo: "1240px",
       },
+      // Easing "mola" e duração padrão da marca — aplica a todo `transition`.
+      transitionTimingFunction: {
+        DEFAULT: "cubic-bezier(.22,1,.36,1)",
+      },
+      transitionDuration: {
+        DEFAULT: "250ms",
+      },
+      keyframes: {
+        shimmer: {
+          "0%": { opacity: "0.55" },
+          "50%": { opacity: "1" },
+          "100%": { opacity: "0.55" },
+        },
+      },
+      animation: {
+        shimmer: "shimmer 1.4s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

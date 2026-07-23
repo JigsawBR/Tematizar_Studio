@@ -12,8 +12,10 @@ export default function Layout() {
     <div className="flex min-h-screen flex-col">
       <ScrollToTop />
       <PromoBar />
-      <Header />
-      <Nav />
+      <div className="sticky top-0 z-40 shadow-[0_4px_20px_rgba(138,102,174,.10)]">
+        <Header />
+        <Nav />
+      </div>
       <main className="flex-1">
         <Outlet />
       </main>

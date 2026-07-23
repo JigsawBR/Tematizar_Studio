@@ -189,6 +189,7 @@ export default function EntrarPage() {
                 onChange={setNome}
                 required
                 placeholder="Seu nome"
+                autoComplete="name"
               />
               <Campo
                 label="WhatsApp"
@@ -196,6 +197,7 @@ export default function EntrarPage() {
                 value={telefone}
                 onChange={setTelefone}
                 placeholder="(83) 9 9999-9999"
+                autoComplete="tel"
               />
             </>
           )}
@@ -206,6 +208,7 @@ export default function EntrarPage() {
             onChange={setEmail}
             required
             placeholder="voce@email.com"
+            autoComplete="email"
           />
           <Campo
             label="Senha"
@@ -214,6 +217,7 @@ export default function EntrarPage() {
             onChange={setSenha}
             required
             placeholder="Mínimo 6 caracteres"
+            autoComplete={aba === "entrar" ? "current-password" : "new-password"}
           />
 
           {aba === "entrar" && (
@@ -311,6 +315,7 @@ function Campo({
   onChange,
   required,
   placeholder,
+  autoComplete,
 }: {
   label: string;
   type: string;
@@ -318,6 +323,7 @@ function Campo({
   onChange: (v: string) => void;
   required?: boolean;
   placeholder?: string;
+  autoComplete?: string;
 }) {
   return (
     <label className="flex flex-col gap-1">
@@ -327,6 +333,7 @@ function Campo({
         value={value}
         required={required}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         onChange={(e) => onChange(e.target.value)}
         className="rounded-xl border-2 border-borda bg-creme px-4 py-3 font-corpo transition focus:border-roxo focus:bg-white focus:outline-none"
       />
