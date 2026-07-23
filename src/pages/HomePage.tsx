@@ -49,7 +49,7 @@ export default function HomePage() {
           {/* coluna de texto */}
           <div className="flex flex-col items-start gap-5">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/[0.18] px-3.5 py-1.5 font-titulo text-[0.78rem] font-bold tracking-wide">
-              ✨ Arquivos digitais para imprimir e montar
+              Arquivos digitais para imprimir e montar
             </span>
             <h1 className="font-titulo text-[clamp(2rem,4.2vw,3.15rem)] font-extrabold leading-[1.08] tracking-tight">
               Topos de bolo digitais para deixar sua festa{" "}

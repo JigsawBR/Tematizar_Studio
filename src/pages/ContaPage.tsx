@@ -49,7 +49,7 @@ export default function ContaPage() {
     const { erro } = await atualizarPerfil(nome, telefone);
     setSalvandoPerfil(false);
     if (erro) return setErroPerfil(erro);
-    mostrarToast("Dados salvos! ✅");
+    mostrarToast("Dados salvos!");
   };
 
   const onSalvarSenha = async (e: React.FormEvent) => {

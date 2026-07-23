@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="mx-auto grid max-w-conteudo grid-cols-1 gap-8 px-5 py-11 sm:grid-cols-3">
         <div>
           <h4 className="mb-3.5 font-titulo text-base text-rosa">
-            🎂 Tematizar Studio
+            Tematizar Studio
           </h4>
           <p className="text-[0.88rem] leading-relaxed opacity-80">
             Topos de bolo digitais para você imprimir, cortar e montar. Download

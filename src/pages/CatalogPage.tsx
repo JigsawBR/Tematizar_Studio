@@ -44,10 +44,10 @@ export default function CatalogPage() {
         <p className="max-w-2xl text-[0.92rem] text-cinza">
           Topos digitais para imprimir e montar.{" "}
           <span className="font-bold text-roxo-escuro">
-            ✔ Arquivos Studio p/ máquina de corte.
+            Arquivos Studio p/ máquina de corte.
           </span>{" "}
           <span className="font-bold text-rosa-escuro">
-            ⚠ PDF p/ corte com tesoura só via WhatsApp.
+            PDF p/ corte com tesoura só via WhatsApp.
           </span>
         </p>
       </div>

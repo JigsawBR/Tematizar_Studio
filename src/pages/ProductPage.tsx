@@ -30,7 +30,6 @@ export default function ProductPage() {
   if (!produto) {
     return (
       <div className="mx-auto max-w-conteudo px-5 py-20 text-center">
-        <span className="mb-3 block text-5xl">🎈</span>
         <h1 className="mb-2 text-2xl font-extrabold">Produto não encontrado</h1>
         <p className="mb-6 text-cinza">
           Este topo não existe ou saiu do catálogo.
@@ -136,11 +135,11 @@ export default function ProductPage() {
 
           <div className="rounded-xl2 border border-borda bg-creme p-4 text-[0.85rem] text-cinza">
             <p>
-              <b className="text-roxo-escuro">✔ Arquivo Studio</b> para máquina
-              de corte incluso.
+              <b className="text-roxo-escuro">Arquivo Studio</b> para máquina de
+              corte incluso.
             </p>
             <p>
-              <b className="text-rosa-escuro">⚠ PDF para corte com tesoura</b>{" "}
+              <b className="text-rosa-escuro">PDF para corte com tesoura</b>{" "}
               apenas via WhatsApp.
             </p>
           </div>

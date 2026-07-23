@@ -22,7 +22,6 @@ export default function KitDigitalPage() {
     <div className="mx-auto max-w-conteudo px-5 py-10">
       {/* hero */}
       <div className="mb-10 rounded-xl2 bg-gradient-to-br from-roxo via-roxo-escuro to-rosa p-8 text-center text-white sm:p-12">
-        <span className="mb-3 block text-5xl">🎁</span>
         <h1 className="mb-2 text-3xl font-extrabold sm:text-4xl">Kit Digital</h1>
         <p className="mx-auto max-w-xl opacity-90">
           Monte um combo com vários topos e economize! Quanto mais temas, maior

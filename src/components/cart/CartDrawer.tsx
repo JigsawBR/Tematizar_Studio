@@ -45,9 +45,9 @@ export default function CartDrawer() {
     const ok = aplicarCupom(codigoCupom);
     if (ok) {
       const pct = (useCart.getState().desconto * 100).toFixed(0);
-      setCupomMsg({ texto: `✔ Cupom aplicado: ${pct}% de desconto!`, ok: true });
+      setCupomMsg({ texto: `Cupom aplicado: ${pct}% de desconto!`, ok: true });
     } else {
-      setCupomMsg({ texto: "✖ Cupom inválido.", ok: false });
+      setCupomMsg({ texto: "Cupom inválido.", ok: false });
     }
   };
 

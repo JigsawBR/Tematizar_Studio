@@ -201,7 +201,7 @@ export default function AdminPage() {
                 </div>
                 <div className="text-[0.8rem] text-cinza">
                   {brl(p.preco_centavos / 100)} ·{" "}
-                  {p.arquivo_studio_path ? "arquivo ✔" : "sem arquivo ⚠"}
+                  {p.arquivo_studio_path ? "com arquivo" : "sem arquivo"}
                 </div>
               </div>
               <Chip
@@ -345,7 +345,7 @@ function ProdutoModal({
         return setErro("Já existe um produto com esse nome. Mude o nome.");
       return setErro("Não foi possível salvar. Tente de novo.");
     }
-    mostrarToast(form.id ? "Produto atualizado! ✅" : "Produto criado! 🎉");
+    mostrarToast(form.id ? "Produto atualizado!" : "Produto criado! 🎉");
     onSalvo();
   };
 
