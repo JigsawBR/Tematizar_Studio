@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useUi } from "@/store/ui";
 import { useCart } from "@/store/cart";
 import { useAuth } from "@/store/auth";
@@ -12,6 +13,13 @@ export default function Header() {
   const sair = useAuth((s) => s.sair);
   const mostrarToast = useUi((s) => s.mostrarToast);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // A busca só faz sentido no catálogo. Ao sair dele, limpa o termo para não
+  // ficar preso na barra enquanto o usuário navega pelas outras páginas.
+  useEffect(() => {
+    if (!location.pathname.startsWith("/catalogo")) setBusca("");
+  }, [location.pathname, setBusca]);
 
   // Login por e-mail salva "nome"; login pelo Google traz "full_name"/"name".
   const nomeCompleto =
