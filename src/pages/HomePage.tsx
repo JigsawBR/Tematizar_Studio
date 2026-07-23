@@ -2,20 +2,21 @@ import { Link } from "react-router-dom";
 import { useCatalog } from "@/store/catalog";
 import CakePlaceholder from "@/components/catalog/CakePlaceholder";
 import ProductGrid from "@/components/catalog/ProductGrid";
+import Icon, { type IconName } from "@/components/ui/Icon";
 
-const CATEGORIAS_DESTAQUE: { nome: string; emoji: string }[] = [
-  { nome: "Meninas", emoji: "🦄" },
-  { nome: "Meninos", emoji: "🚀" },
-  { nome: "Chá de Bebê", emoji: "🧸" },
-  { nome: "Páscoa", emoji: "🐰" },
-  { nome: "Formatura", emoji: "🎓" },
-  { nome: "Datas", emoji: "🎄" },
+const CATEGORIAS_DESTAQUE: { nome: string; icon: IconName }[] = [
+  { nome: "Meninas", icon: "crown" },
+  { nome: "Meninos", icon: "rocket" },
+  { nome: "Chá de Bebê", icon: "baby" },
+  { nome: "Páscoa", icon: "egg" },
+  { nome: "Formatura", icon: "cap" },
+  { nome: "Datas", icon: "gift" },
 ];
 
-const BENEFICIOS = [
-  { emoji: "⚡", titulo: "Download imediato", texto: "Receba o arquivo assim que o pagamento for confirmado." },
-  { emoji: "✂️", titulo: "Pronto p/ máquina de corte", texto: "Arquivos Studio prontos para Silhouette e similares." },
-  { emoji: "💬", titulo: "Suporte no WhatsApp", texto: "Tire dúvidas e finalize seu pedido pelo WhatsApp." },
+const BENEFICIOS: { icon: IconName; titulo: string; texto: string }[] = [
+  { icon: "bolt", titulo: "Download imediato", texto: "Receba o arquivo assim que o pagamento for confirmado." },
+  { icon: "scissors", titulo: "Pronto p/ máquina de corte", texto: "Arquivos Studio prontos para Silhouette e similares." },
+  { icon: "chat", titulo: "Suporte no WhatsApp", texto: "Tire dúvidas e finalize seu pedido pelo WhatsApp." },
 ];
 
 // Bolinhas decorativas espalhadas pelo hero (posição/ tamanho/ cor fixos).
@@ -75,10 +76,10 @@ export default function HomePage() {
             </div>
             <div className="mt-1 flex flex-wrap gap-5 font-corpo text-[0.82rem] font-bold">
               <span className="inline-flex items-center gap-1.5">
-                <span aria-hidden>✓</span> Download imediato
+                <Icon name="check" size={16} /> Download imediato
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <span aria-hidden>✓</span> Pagamento via PIX
+                <Icon name="check" size={16} /> Pagamento via PIX
               </span>
             </div>
           </div>
@@ -111,8 +112,8 @@ export default function HomePage() {
             key={b.titulo}
             className="flex items-start gap-3 rounded-xl2 border border-borda bg-white p-4 shadow-marca"
           >
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-roxo-claro text-2xl">
-              {b.emoji}
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-roxo-claro text-roxo-escuro">
+              <Icon name={b.icon} size={22} />
             </span>
             <div>
               <h3 className="font-titulo text-base font-bold text-roxo-escuro">
@@ -142,8 +143,8 @@ export default function HomePage() {
               to={`/catalogo?categoria=${encodeURIComponent(c.nome)}`}
               className="flex flex-col items-center gap-2.5 rounded-xl2 border border-borda bg-roxo-claro p-5 text-center shadow-marca transition hover:-translate-y-1 hover:shadow-marca-hover"
             >
-              <span className="grid h-[54px] w-[54px] place-items-center rounded-full bg-white text-3xl shadow-marca">
-                {c.emoji}
+              <span className="grid h-[54px] w-[54px] place-items-center rounded-full bg-white text-roxo-escuro shadow-marca">
+                <Icon name={c.icon} size={26} />
               </span>
               <span className="font-titulo text-[0.9rem] font-bold text-roxo-escuro">
                 {c.nome}

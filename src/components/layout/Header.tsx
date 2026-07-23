@@ -4,6 +4,7 @@ import { useUi } from "@/store/ui";
 import { useCart } from "@/store/cart";
 import { useAuth } from "@/store/auth";
 import { WHATSAPP } from "@/config";
+import Icon from "@/components/ui/Icon";
 
 export default function Header() {
   const { busca, setBusca, abrirCarrinho } = useUi();
@@ -31,7 +32,7 @@ export default function Header() {
 
   const onSair = async () => {
     await sair();
-    mostrarToast("Você saiu da conta. Até logo! 👋");
+    mostrarToast("Você saiu da conta.");
     navigate("/entrar");
   };
 
@@ -77,7 +78,7 @@ export default function Header() {
             aria-label="Buscar"
             className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-roxo text-white"
           >
-            🔍
+            <Icon name="search" size={18} />
           </button>
         </form>
 
@@ -89,9 +90,9 @@ export default function Header() {
                 to="/conta"
                 aria-label="Minha conta"
                 title="Minha conta"
-                className="text-2xl"
+                className="text-roxo-escuro"
               >
-                👤
+                <Icon name="user" size={26} />
               </Link>
               <span className="hidden md:block">
                 <b className="block font-extrabold">Olá, {primeiroNome}</b>
@@ -123,7 +124,7 @@ export default function Header() {
               title="Entrar ou cadastrar"
               className="flex items-center gap-2 whitespace-nowrap text-[0.82rem]"
             >
-              <span className="text-2xl">👤</span>
+              <Icon name="user" size={26} className="text-roxo-escuro" />
               <span className="hidden md:block">
                 <b className="block font-extrabold">Olá! Faça login</b>
                 <span className="text-cinza">ou cadastre-se</span>
@@ -136,16 +137,16 @@ export default function Header() {
             rel="noopener noreferrer"
             aria-label="Fale conosco no WhatsApp"
             title="Fale conosco no WhatsApp"
-            className="text-2xl"
+            className="text-roxo-escuro transition hover:text-roxo"
           >
-            💬
+            <Icon name="chat" size={24} />
           </a>
           <button
             onClick={abrirCarrinho}
             aria-label="Abrir carrinho"
-            className="relative text-2xl text-roxo"
+            className="relative text-roxo"
           >
-            🛒
+            <Icon name="cart" size={25} />
             <span className="absolute -right-2 -top-1.5 grid h-[19px] min-w-[19px] place-items-center rounded-[10px] bg-rosa px-1 font-titulo text-[0.7rem] font-extrabold text-white">
               {totalItens}
             </span>

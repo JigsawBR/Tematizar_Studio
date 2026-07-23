@@ -6,6 +6,7 @@ import { useUi } from "@/store/ui";
 import { useCatalog } from "@/store/catalog";
 import CakePlaceholder from "@/components/catalog/CakePlaceholder";
 import ProductGrid from "@/components/catalog/ProductGrid";
+import Icon from "@/components/ui/Icon";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -51,7 +52,7 @@ export default function ProductPage() {
   const adicionarAoCarrinho = () => {
     adicionar(produto.id);
     if (qtd > 1) mudarQtd(produto.id, qtd - 1);
-    mostrarToast("Adicionado ao carrinho! 🎉");
+    mostrarToast("Adicionado ao carrinho!");
     abrirCarrinho();
   };
 
@@ -130,7 +131,7 @@ export default function ProductPage() {
             onClick={adicionarAoCarrinho}
             className="flex items-center justify-center gap-2 rounded-2xl bg-roxo py-4 font-titulo text-lg font-bold text-white transition hover:bg-roxo-escuro"
           >
-            Adicionar ao carrinho 🛒
+            Adicionar ao carrinho <Icon name="cart" size={20} />
           </button>
 
           <div className="rounded-xl2 border border-borda bg-creme p-4 text-[0.85rem] text-cinza">

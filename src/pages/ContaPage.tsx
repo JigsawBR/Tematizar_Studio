@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/store/auth";
 import { useUi } from "@/store/ui";
 import { supabase } from "@/lib/supabase";
+import Icon from "@/components/ui/Icon";
 
 export default function ContaPage() {
   const navigate = useNavigate();
@@ -64,12 +65,12 @@ export default function ContaPage() {
     if (erro) return setErroSenha(erro);
     setSenha("");
     setConfirma("");
-    mostrarToast("Senha atualizada! 🔒");
+    mostrarToast("Senha atualizada!");
   };
 
   const onSair = async () => {
     await sair();
-    mostrarToast("Você saiu da conta. Até logo! 👋");
+    mostrarToast("Você saiu da conta.");
     navigate("/entrar");
   };
 
@@ -85,7 +86,9 @@ export default function ContaPage() {
     return (
       <div className="mx-auto max-w-md px-5 py-16">
         <div className="rounded-xl2 border border-borda bg-white p-8 text-center shadow-marca">
-          <span className="mb-3 block text-5xl">🔒</span>
+          <span className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-roxo-claro text-roxo-escuro">
+            <Icon name="lock" size={28} />
+          </span>
           <h1 className="mb-2 font-titulo text-xl font-bold text-roxo-escuro">
             Entre na sua conta
           </h1>

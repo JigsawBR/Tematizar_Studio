@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { WHATSAPP } from "@/config";
+import Icon from "@/components/ui/Icon";
 
 export default function Footer() {
   return (
@@ -54,25 +55,25 @@ export default function Footer() {
                 href={`https://wa.me/${WHATSAPP}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[0.88rem] opacity-85 transition hover:text-rosa hover:opacity-100"
+                className="inline-flex items-center gap-2 text-[0.88rem] opacity-85 transition hover:text-rosa hover:opacity-100"
               >
-                💬 WhatsApp
+                <Icon name="chat" size={17} /> WhatsApp
               </a>
             </li>
             <li>
               <Link
                 to="/contato"
-                className="text-[0.88rem] opacity-85 transition hover:text-rosa hover:opacity-100"
+                className="inline-flex items-center gap-2 text-[0.88rem] opacity-85 transition hover:text-rosa hover:opacity-100"
               >
-                📷 Instagram
+                <Icon name="instagram" size={17} /> Instagram
               </Link>
             </li>
             <li>
               <Link
                 to="/contato"
-                className="text-[0.88rem] opacity-85 transition hover:text-rosa hover:opacity-100"
+                className="inline-flex items-center gap-2 text-[0.88rem] opacity-85 transition hover:text-rosa hover:opacity-100"
               >
-                ✉ E-mail
+                <Icon name="mail" size={17} /> E-mail
               </Link>
             </li>
           </ul>

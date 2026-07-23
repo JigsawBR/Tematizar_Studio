@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/store/auth";
 import { useUi } from "@/store/ui";
 import { supabase } from "@/lib/supabase";
+import Icon from "@/components/ui/Icon";
 
 interface LinhaDownload {
   id: string;
@@ -37,7 +38,7 @@ export default function DownloadsPage() {
       body: { produto_id: produtoId },
     });
     if (error || !data?.url) {
-      mostrarToast("Arquivo ainda não disponível. Fale com a gente. 💬");
+      mostrarToast("Arquivo ainda não disponível. Fale com a gente.");
       return;
     }
     window.open(data.url, "_blank", "noopener");
@@ -61,7 +62,9 @@ export default function DownloadsPage() {
 
       {!user ? (
         <div className="mx-auto max-w-md rounded-xl2 border border-borda bg-white p-8 text-center shadow-marca">
-          <span className="mb-3 block text-5xl">🔒</span>
+          <span className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-roxo-claro text-roxo-escuro">
+            <Icon name="lock" size={28} />
+          </span>
           <h2 className="mb-2 font-titulo text-xl font-bold text-roxo-escuro">
             Entre na sua conta
           </h2>
@@ -86,7 +89,9 @@ export default function DownloadsPage() {
         <div className="py-16 text-center text-cinza">Carregando compras...</div>
       ) : linhas.length === 0 ? (
         <div className="rounded-xl2 border border-borda bg-white p-10 text-center shadow-marca">
-          <span className="mb-3 block text-5xl">📥</span>
+          <span className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-roxo-claro text-roxo-escuro">
+            <Icon name="download" size={28} />
+          </span>
           <h2 className="mb-2 font-titulo text-xl font-bold text-roxo-escuro">
             Você ainda não tem downloads
           </h2>

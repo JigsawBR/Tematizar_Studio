@@ -1,22 +1,29 @@
 import { WHATSAPP } from "@/config";
+import Icon, { type IconName } from "@/components/ui/Icon";
 
-const CANAIS = [
+const CANAIS: {
+  icon: IconName;
+  titulo: string;
+  texto: string;
+  href: string;
+  acao: string;
+}[] = [
   {
-    emoji: "💬",
+    icon: "chat",
     titulo: "WhatsApp",
     texto: "Atendimento e pedidos",
     href: `https://wa.me/${WHATSAPP}`,
     acao: "Chamar no WhatsApp",
   },
   {
-    emoji: "📷",
+    icon: "instagram",
     titulo: "Instagram",
     texto: "@tematizarstudio",
     href: "https://instagram.com",
     acao: "Ver perfil",
   },
   {
-    emoji: "✉",
+    icon: "mail",
     titulo: "E-mail",
     texto: "contato@tematizarstudio.com",
     href: "mailto:contato@tematizarstudio.com",
@@ -42,7 +49,9 @@ export default function ContatoPage() {
             rel="noopener noreferrer"
             className="flex flex-col items-center gap-2 rounded-xl2 border border-borda bg-white p-6 text-center shadow-marca transition hover:-translate-y-1 hover:shadow-marca-hover"
           >
-            <span className="text-4xl">{c.emoji}</span>
+            <span className="grid h-14 w-14 place-items-center rounded-full bg-roxo-claro text-roxo-escuro">
+              <Icon name={c.icon} size={26} />
+            </span>
             <h3 className="font-titulo text-lg font-bold text-roxo-escuro">
               {c.titulo}
             </h3>

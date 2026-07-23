@@ -4,6 +4,7 @@ import { brl } from "@/lib/format";
 import { useCart } from "@/store/cart";
 import { useUi } from "@/store/ui";
 import CakePlaceholder from "@/components/catalog/CakePlaceholder";
+import Icon from "@/components/ui/Icon";
 
 interface Props {
   produto: Produto;
@@ -15,7 +16,7 @@ export default function ProductCard({ produto }: Props) {
 
   const comprar = () => {
     adicionar(produto.id);
-    mostrarToast("Adicionado ao carrinho! 🎉");
+    mostrarToast("Adicionado ao carrinho!");
   };
 
   return (
@@ -48,7 +49,7 @@ export default function ProductCard({ produto }: Props) {
           onClick={comprar}
           className="mt-auto flex items-center justify-center gap-2 rounded-xl bg-roxo py-2.5 font-titulo font-bold text-white transition hover:bg-roxo-escuro"
         >
-          Comprar 🛒
+          Comprar <Icon name="cart" size={17} />
         </button>
       </div>
     </article>

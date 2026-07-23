@@ -23,7 +23,7 @@ export default function RedefinirSenhaPage() {
     const { erro } = await redefinirSenha(senha);
     setEnviando(false);
     if (erro) return setErro(erro);
-    mostrarToast("Senha atualizada! 🎉");
+    mostrarToast("Senha atualizada!");
     navigate("/downloads");
   };
 

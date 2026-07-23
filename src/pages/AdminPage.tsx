@@ -6,6 +6,7 @@ import { useUi } from "@/store/ui";
 import { supabase } from "@/lib/supabase";
 import { brl } from "@/lib/format";
 import { slugify } from "@/lib/slug";
+import Icon from "@/components/ui/Icon";
 
 interface Categoria {
   id: string;
@@ -149,7 +150,9 @@ export default function AdminPage() {
   if (!ehAdmin) {
     return (
       <Aviso>
-        <span className="mb-3 block text-5xl">🔒</span>
+        <span className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-roxo-claro text-roxo-escuro">
+          <Icon name="lock" size={28} />
+        </span>
         Acesso restrito. Esta área é só para administradores.
       </Aviso>
     );
@@ -345,7 +348,7 @@ function ProdutoModal({
         return setErro("Já existe um produto com esse nome. Mude o nome.");
       return setErro("Não foi possível salvar. Tente de novo.");
     }
-    mostrarToast(form.id ? "Produto atualizado!" : "Produto criado! 🎉");
+    mostrarToast(form.id ? "Produto atualizado!" : "Produto criado!");
     onSalvo();
   };
 

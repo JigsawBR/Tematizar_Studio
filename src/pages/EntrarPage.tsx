@@ -40,7 +40,7 @@ export default function EntrarPage() {
       const { erro } = await entrar(email, senha);
       setEnviando(false);
       if (erro) return setErro(erro);
-      mostrarToast("Bem-vindo de volta! 🎉");
+      mostrarToast("Bem-vindo de volta!");
       navigate(destino);
     } else {
       const { erro, precisaConfirmar } = await cadastrar(
@@ -52,10 +52,10 @@ export default function EntrarPage() {
       setEnviando(false);
       if (erro) return setErro(erro);
       if (precisaConfirmar) {
-        mostrarToast("Confirme seu e-mail para ativar a conta. 📩");
+        mostrarToast("Confirme seu e-mail para ativar a conta.");
         setAba("entrar");
       } else {
-        mostrarToast("Conta criada! 🎉");
+        mostrarToast("Conta criada!");
         navigate(destino);
       }
     }
@@ -91,7 +91,7 @@ export default function EntrarPage() {
             <>
               <p className="mb-6 mt-2 text-[0.9rem] text-cinza">
                 Se existir uma conta com <b>{email}</b>, enviamos um link para
-                redefinir a senha. Confira sua caixa de entrada (e o spam). 📩
+                redefinir a senha. Confira sua caixa de entrada (e o spam).
               </p>
               <button
                 onClick={irParaLogin}

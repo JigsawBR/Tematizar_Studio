@@ -7,6 +7,7 @@ import { useCatalog } from "@/store/catalog";
 import { supabase } from "@/lib/supabase";
 import { brl } from "@/lib/format";
 import CakePlaceholder from "@/components/catalog/CakePlaceholder";
+import Icon from "@/components/ui/Icon";
 
 export default function CartDrawer() {
   const { itens, cupom, desconto, mudarQtd, remover, aplicarCupom } = useCart();
@@ -55,7 +56,7 @@ export default function CartDrawer() {
     if (itens.length === 0) return;
     if (!user) {
       fecharCarrinho();
-      mostrarToast("Entre na sua conta para finalizar. 🔒");
+      mostrarToast("Entre na sua conta para finalizar.");
       navigate("/entrar?redirect=/downloads");
       return;
     }
@@ -98,20 +99,24 @@ export default function CartDrawer() {
         }`}
       >
         <div className="flex items-center justify-between bg-gradient-to-r from-roxo to-rosa px-5 py-5 text-white">
-          <h2 className="text-xl">🛒 Seu carrinho</h2>
+          <h2 className="flex items-center gap-2 text-xl">
+            <Icon name="cart" size={22} /> Seu carrinho
+          </h2>
           <button
             onClick={fecharCarrinho}
             aria-label="Fechar carrinho"
-            className="text-2xl leading-none"
+            className="leading-none"
           >
-            ×
+            <Icon name="close" size={24} />
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
           {itens.length === 0 ? (
             <div className="px-5 py-12 text-center text-cinza">
-              <span className="mb-3 block text-5xl">🛒</span>
+              <span className="mx-auto mb-3 grid h-16 w-16 place-items-center rounded-full bg-roxo-claro text-roxo-escuro">
+                <Icon name="cart" size={30} />
+              </span>
               Seu carrinho está vazio.
               <br />
               Escolha seus topos favoritos!
@@ -150,9 +155,9 @@ export default function CartDrawer() {
                   <button
                     onClick={() => remover(i.id)}
                     aria-label="Remover"
-                    className="self-start text-lg text-cinza transition hover:text-rosa-escuro"
+                    className="self-start text-cinza transition hover:text-rosa-escuro"
                   >
-                    🗑️
+                    <Icon name="trash" size={18} />
                   </button>
                 </div>
               );
@@ -207,11 +212,16 @@ export default function CartDrawer() {
               disabled={pagando}
               className="flex w-full items-center justify-center gap-2.5 rounded-[14px] bg-roxo py-3.5 font-titulo text-[1.05rem] font-bold text-white transition hover:bg-roxo-escuro disabled:opacity-60"
             >
-              {pagando ? "Abrindo pagamento..." : "💳 Pagar (PIX ou cartão)"}
+              {pagando ? (
+                "Abrindo pagamento..."
+              ) : (
+                <>
+                  <Icon name="card" size={20} /> Pagar (PIX ou cartão)
+                </>
+              )}
             </button>
             <p className="mt-2.5 text-center text-[0.78rem] text-cinza">
-              📥 Após o pagamento, seu arquivo fica em “Meus Downloads” para
-              baixar.
+              Após o pagamento, seu arquivo fica em “Meus Downloads” para baixar.
             </p>
           </div>
         )}

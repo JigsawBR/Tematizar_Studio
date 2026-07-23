@@ -1,27 +1,29 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useCart } from "@/store/cart";
+import Icon, { type IconName } from "@/components/ui/Icon";
 
 type Status = "sucesso" | "pendente" | "falha";
 
 const CONTEUDO: Record<
   Status,
-  { emoji: string; titulo: string; texto: string }
+  { icon: IconName; erro?: boolean; titulo: string; texto: string }
 > = {
   sucesso: {
-    emoji: "🎉",
+    icon: "check",
     titulo: "Pagamento aprovado!",
     texto:
       "Recebemos seu pagamento. Seus topos já estão liberados em Meus Downloads.",
   },
   pendente: {
-    emoji: "⏳",
+    icon: "clock",
     titulo: "Pagamento em processamento",
     texto:
       "Se você pagou via PIX, pode levar alguns instantes para confirmar. Assim que aprovar, seus topos aparecem em Meus Downloads.",
   },
   falha: {
-    emoji: "😕",
+    icon: "alert",
+    erro: true,
     titulo: "Não foi possível concluir o pagamento",
     texto:
       "Nada foi cobrado. Você pode tentar novamente ou falar com a gente pelo WhatsApp.",
@@ -40,7 +42,15 @@ export default function PedidoStatusPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 py-20 text-center">
-      <span className="mb-4 block text-6xl">{info.emoji}</span>
+      <span
+        className={`mx-auto mb-5 grid h-16 w-16 place-items-center rounded-full ${
+          info.erro
+            ? "bg-rosa-claro text-rosa-escuro"
+            : "bg-roxo-claro text-roxo-escuro"
+        }`}
+      >
+        <Icon name={info.icon} size={30} />
+      </span>
       <h1 className="mb-3 text-2xl font-extrabold text-roxo-escuro">
         {info.titulo}
       </h1>
