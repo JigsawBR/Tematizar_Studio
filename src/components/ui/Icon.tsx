@@ -21,6 +21,7 @@ export type IconName =
   | "instagram"
   | "mail"
   | "lock"
+  | "painel"
   | "crown"
   | "rocket"
   | "baby"
@@ -128,6 +129,16 @@ const ICONES: Record<IconName, { filled?: boolean; node: ReactNode }> = {
       <>
         <rect x="5" y="11" width="14" height="9" rx="2" />
         <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+      </>
+    ),
+  },
+  painel: {
+    node: (
+      <>
+        <rect x="3" y="3" width="7.5" height="9" rx="1.6" />
+        <rect x="13.5" y="3" width="7.5" height="5.5" rx="1.6" />
+        <rect x="13.5" y="12" width="7.5" height="9" rx="1.6" />
+        <rect x="3" y="15.5" width="7.5" height="5.5" rx="1.6" />
       </>
     ),
   },

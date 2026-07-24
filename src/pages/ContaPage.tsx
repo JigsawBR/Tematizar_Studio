@@ -9,7 +9,8 @@ import { mascaraTelefone, apenasDigitos } from "@/lib/telefone";
 
 export default function ContaPage() {
   const navigate = useNavigate();
-  const { user, carregando, atualizarPerfil, redefinirSenha, sair } = useAuth();
+  const { user, carregando, ehAdmin, atualizarPerfil, redefinirSenha, sair } =
+    useAuth();
   const mostrarToast = useUi((s) => s.mostrarToast);
 
   const [nome, setNome] = useState("");
@@ -177,6 +178,18 @@ export default function ContaPage() {
           </Button>
         </form>
       </section>
+
+      {ehAdmin && (
+        <Button
+          to="/admin"
+          variant="primary"
+          full
+          className="mb-6"
+          icon={<Icon name="painel" size={18} />}
+        >
+          Painel do administrador
+        </Button>
+      )}
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <Button to="/downloads" variant="outline" className="flex-1">

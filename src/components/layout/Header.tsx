@@ -86,6 +86,18 @@ export default function Header() {
         <div className="ml-auto flex items-center gap-4">
           {user ? (
             <div className="flex items-center gap-2 whitespace-nowrap text-[0.82rem]">
+              {/* No mobile o bloco de texto abaixo some, então o admin
+                  precisa de um atalho próprio aqui. */}
+              {ehAdmin && (
+                <Link
+                  to="/admin"
+                  aria-label="Painel do administrador"
+                  title="Painel do administrador"
+                  className="text-roxo-escuro transition hover:text-roxo md:hidden"
+                >
+                  <Icon name="painel" size={24} />
+                </Link>
+              )}
               <Link
                 to="/conta"
                 aria-label="Minha conta"
