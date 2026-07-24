@@ -34,7 +34,7 @@ export default function Nav() {
           <li key={l.label}>
             <Link
               to={l.to}
-              className={`block whitespace-nowrap rounded-lg px-3.5 py-3.5 font-titulo text-[0.82rem] font-semibold tracking-wide text-white transition hover:bg-white/20 ${
+              className={`block whitespace-nowrap rounded-lg px-3.5 py-2.5 font-titulo text-[0.82rem] font-semibold tracking-wide text-white transition hover:bg-white/20 sm:py-3.5 ${
                 ehAtivo(l.to) ? "bg-white/20" : ""
               }`}
             >

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { produtosFiltrados } from "@/lib/catalog";
 import { useUi } from "@/store/ui";
@@ -17,6 +17,9 @@ export default function CatalogPage() {
   const carregando = useCatalog((s) => s.carregando);
   const erro = useCatalog((s) => s.erro);
   const recarregar = useCatalog((s) => s.carregar);
+  // Abaixo de lg os filtros ficam recolhidos atrás do botão "Filtrar", para os
+  // produtos não nascerem abaixo da dobra.
+  const [filtrosAbertos, setFiltrosAbertos] = useState(false);
 
   // sincroniza a categoria vinda da URL (?categoria=Datas) com o filtro
   const categoriaUrl = searchParams.get("categoria");
@@ -57,8 +60,31 @@ export default function CatalogPage() {
         </p>
       </div>
 
-      <div className="mx-auto grid max-w-conteudo grid-cols-1 items-start gap-6 px-5 py-5 md:grid-cols-[260px_1fr]">
-        <Filters />
+      <div className="mx-auto grid max-w-conteudo grid-cols-1 items-start gap-6 px-5 py-5 lg:grid-cols-[260px_1fr]">
+        <div>
+          <button
+            onClick={() => setFiltrosAbertos((v) => !v)}
+            aria-expanded={filtrosAbertos}
+            className="mb-3 flex w-full items-center justify-between rounded-xl border-2 border-borda bg-white px-4 py-3 font-titulo font-bold text-roxo-escuro transition hover:border-roxo lg:hidden"
+          >
+            <span className="flex items-center gap-2">
+              Filtrar
+              {categoria && (
+                <span className="rounded-full bg-roxo-claro px-2.5 py-0.5 text-[0.72rem] font-extrabold">
+                  {categoria}
+                </span>
+              )}
+            </span>
+            <Icon
+              name="chevronDown"
+              size={18}
+              className={`transition ${filtrosAbertos ? "rotate-180" : ""}`}
+            />
+          </button>
+          <div className={filtrosAbertos ? "" : "hidden lg:block"}>
+            <Filters />
+          </div>
+        </div>
         <div>
           <SortBar quantidade={lista.length} />
           {erro ? (

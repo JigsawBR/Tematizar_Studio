@@ -16,9 +16,10 @@ export default function Filters() {
   const contar = (c: string) => produtos.filter((p) => p.cat === c).length;
 
   return (
-    <aside className="flex flex-row gap-3.5 overflow-x-auto pb-1.5 md:sticky md:top-4 md:flex-col md:overflow-visible">
+    // top-[150px]: fica abaixo do cabeçalho fixo (header + menu).
+    <aside className="flex flex-row gap-3.5 overflow-x-auto pb-1.5 lg:sticky lg:top-[150px] lg:flex-col lg:overflow-visible">
       {/* Categorias */}
-      <div className="min-w-[230px] overflow-hidden rounded-xl2 border border-borda bg-white shadow-marca md:min-w-0">
+      <div className="min-w-[230px] overflow-hidden rounded-xl2 border border-borda bg-white shadow-marca lg:min-w-0">
         <h3 className="flex items-center justify-between px-4.5 py-4 text-[0.95rem]">
           Categorias <span>▾</span>
         </h3>
@@ -42,7 +43,7 @@ export default function Filters() {
       </div>
 
       {/* Preço */}
-      <div className="min-w-[230px] overflow-hidden rounded-xl2 border border-borda bg-white shadow-marca md:min-w-0">
+      <div className="min-w-[230px] overflow-hidden rounded-xl2 border border-borda bg-white shadow-marca lg:min-w-0">
         <h3 className="flex items-center justify-between px-4.5 py-4 text-[0.95rem]">
           Preço <span>▾</span>
         </h3>

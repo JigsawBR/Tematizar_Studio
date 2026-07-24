@@ -43,15 +43,15 @@ export default function Header() {
 
   return (
     <header className="border-b border-borda bg-white">
-      <div className="mx-auto flex max-w-conteudo flex-wrap items-center gap-5 px-5 py-4">
+      <div className="mx-auto flex max-w-conteudo flex-wrap items-center gap-x-4 gap-y-2.5 px-5 py-3 sm:gap-5 sm:py-4">
         {/* marca */}
         <Link to="/" className="flex shrink-0 items-center gap-2.5">
           <img
             src="/logo.jpeg"
             alt="Tematizar Studio"
-            className="h-12 w-12 rounded-full object-cover shadow-marca"
+            className="h-10 w-10 rounded-full object-cover shadow-marca sm:h-12 sm:w-12"
           />
-          <span className="font-marca text-lg font-bold leading-tight text-roxo-escuro">
+          <span className="font-marca text-base font-bold leading-tight text-roxo-escuro sm:text-lg">
             Tematizar Studio
             <small className="block font-corpo text-[0.6rem] font-semibold tracking-[0.14em] text-cinza">
               ARQUIVOS DIGITAIS
@@ -71,19 +71,19 @@ export default function Header() {
             onChange={(e) => setBusca(e.target.value)}
             placeholder="O que você está buscando?"
             aria-label="Buscar produtos"
-            className="w-full rounded-[40px] border-2 border-borda bg-creme py-3.5 pl-5 pr-12 font-corpo text-[0.95rem] transition focus:border-roxo focus:bg-white focus:outline-none"
+            className="w-full rounded-[40px] border-2 border-borda bg-creme py-2.5 pl-5 pr-12 font-corpo text-[0.95rem] transition focus:border-roxo focus:bg-white focus:outline-none sm:py-3.5"
           />
           <button
             type="submit"
             aria-label="Buscar"
-            className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-roxo text-white"
+            className="absolute right-1.5 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-roxo text-white sm:h-9 sm:w-9"
           >
             <Icon name="search" size={18} />
           </button>
         </form>
 
-        {/* ações */}
-        <div className="flex items-center gap-4">
+        {/* ações — ml-auto mantém tudo na mesma linha do logo no mobile */}
+        <div className="ml-auto flex items-center gap-4">
           {user ? (
             <div className="flex items-center gap-2 whitespace-nowrap text-[0.82rem]">
               <Link

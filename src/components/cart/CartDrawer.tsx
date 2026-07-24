@@ -181,7 +181,7 @@ export default function CartDrawer() {
                 value={codigoCupom}
                 onChange={(e) => setCodigoCupom(e.target.value)}
                 placeholder="Cupom de desconto"
-                className="flex-1 rounded-[10px] border-2 border-borda px-3.5 py-2.5 font-corpo font-bold uppercase focus:border-roxo focus:outline-none"
+                className="min-w-0 flex-1 rounded-[10px] border-2 border-borda px-3.5 py-2.5 font-corpo font-bold uppercase focus:border-roxo focus:outline-none"
               />
               <Button variant="dark" onClick={onAplicarCupom}>
                 Aplicar
